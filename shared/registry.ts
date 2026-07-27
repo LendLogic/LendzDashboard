@@ -81,6 +81,7 @@ export const MODULE_REGISTRY = [
     name: 'Verified Truth',
     sub: 'Governed, evidence-backed loan state. Currently defining the data model and integration contract.',
     board: null,
+    hidden: true,
     accentColor: '#7A5FD0',
     baseline: {
       percent: 55,
@@ -312,6 +313,7 @@ export const MODULE_REGISTRY = [
     analyzer: true,
     sub: 'Tax form extraction. Planned for Release Two.',
     board: null,
+    hidden: true,
     accentColor: '#5A8FB5',
     baseline: {
       percent: 30,

@@ -104,13 +104,11 @@ test('lexi shares the Broker LOS board, so it is board-backed by default', () =>
   else process.env.ID_MONDAY_LEXI = orig
 })
 
-test('an env override makes a boardless module visible', () => {
+test('a hidden module stays out even when a board id arrives — the switch outranks the board', () => {
   const orig = process.env.ID_MONDAY_TAX
-  delete process.env.ID_MONDAY_TAX
-  expect(getModuleBoardId('tax')).toBeNull()
   process.env.ID_MONDAY_TAX = '12345'
   expect(getModuleBoardId('tax')).toBe(12345)
-  expect(activeModuleKeys()).toContain('tax')
+  expect(activeModuleKeys()).not.toContain('tax')
   if (orig === undefined) delete process.env.ID_MONDAY_TAX
   else process.env.ID_MONDAY_TAX = orig
 })
@@ -119,7 +117,7 @@ test('activeModuleKeys are the board-backed, non-hidden modules in canonical ord
   expect(activeModuleKeys()).toEqual(['pe', 'uw', 'lexi', 'broker', 'bank', 'id', 'pl', 'paystub', 'appraisal'])
 })
 
-test('no module ships hidden, so activeModuleKeys is exactly the board-backed set', () => {
+test('activeModuleKeys equals the board-backed set, since the hidden modules have no board either', () => {
   const boardBacked = MODULE_ORDER.filter((k) => getModuleBoardId(k) != null)
   expect(activeModuleKeys()).toEqual(boardBacked)
 })
