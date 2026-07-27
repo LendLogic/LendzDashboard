@@ -47,11 +47,13 @@ test('status column defaults to task_status; broker and lexi declare status', ()
   expect(moduleStatusColumn(entryFor('lexi'))).toBe('status')
 })
 
-test('appraisal is a registered analyzer reading its own board on registry defaults', () => {
+test('appraisal keeps its board wired while hidden, so unhiding it needs no other change', () => {
   const appraisal = entryFor('appraisal')
   expect(appraisal.analyzer).toBe(true)
   expect(appraisal.board).toBe(18423914149)
   expect(moduleStatusColumn(appraisal)).toBe('task_status')
+  expect(appraisal.hidden).toBe(true)
+  expect(isActiveEntry(appraisal, appraisal.board!)).toBe(false)
   expect(ANALYZER_KEYS).toContain('appraisal')
 })
 
@@ -71,8 +73,8 @@ test('hidden takes a module out even with a board id; without a board there is n
   expect(isActiveEntry({ ...entry, hidden: true }, null)).toBe(false)
 })
 
-test('exactly vt and tax ship hidden', () => {
-  expect(MODULE_REGISTRY.filter((e) => e.hidden).map((e) => e.key)).toEqual(['vt', 'tax'])
+test('exactly vt, appraisal and tax ship hidden', () => {
+  expect(MODULE_REGISTRY.filter((e) => e.hidden).map((e) => e.key)).toEqual(['vt', 'appraisal', 'tax'])
 })
 
 test('every registry key is unique', () => {
