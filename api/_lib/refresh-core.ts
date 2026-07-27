@@ -3,7 +3,7 @@ import type { RawStory } from './monday.js'
 import { assembleLivePayload } from './rollup.js'
 import { writeLatest } from './blob.js'
 import {
-  boardBackedKeys,
+  activeModuleKeys,
   filterStoriesForModule,
   getModuleBoardId,
   getModuleStatusColumnId,
@@ -20,7 +20,7 @@ export interface RefreshResult {
 // blob. Shared by the scheduled job and any manual trigger; no HTTP concerns here.
 export async function runRefresh(): Promise<RefreshResult> {
   const token = getMondayToken()
-  const keys = boardBackedKeys()
+  const keys = activeModuleKeys()
   const results = await Promise.all(
     keys.map((k) =>
       fetchBoardStories({ token, boardId: getModuleBoardId(k)!, statusColumnId: getModuleStatusColumnId(k) })

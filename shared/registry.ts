@@ -15,6 +15,10 @@ export interface ModuleEntry {
   statusColumn?: string
   // Defaults to ID_MONDAY_<KEY>.
   envVar?: string
+  // Editorial switch: keep the board wired but drop the module from the tabs and
+  // from every rollup. Distinct from a null board, which means there is nothing
+  // to read yet.
+  hidden?: boolean
   sub?: string
   accentColor?: string
   brief?: CardBrief
@@ -77,6 +81,7 @@ export const MODULE_REGISTRY = [
     name: 'Verified Truth',
     sub: 'Governed, evidence-backed loan state. Currently defining the data model and integration contract.',
     board: null,
+    hidden: true,
     accentColor: '#7A5FD0',
     baseline: {
       percent: 55,
@@ -308,6 +313,7 @@ export const MODULE_REGISTRY = [
     analyzer: true,
     sub: 'Tax form extraction. Planned for Release Two.',
     board: null,
+    hidden: true,
     accentColor: '#5A8FB5',
     baseline: {
       percent: 30,
@@ -340,6 +346,13 @@ export const DEFAULT_STATUS_COLUMN = 'task_status'
 
 const ANALYZER_SUB = 'Document-extraction analyzer. Build progress from the Analyzers workstream.'
 const DELIVERY_SUB = 'Delivery module. Build progress from its dedicated Monday board.'
+
+// A module produces a live card only when it has a board to read and is not
+// deliberately hidden. Board resolution needs env access, so the caller passes the
+// resolved id in and the visibility rule stays here with the registry.
+export function isActiveEntry(entry: ModuleEntry, boardId: number | null): boolean {
+  return boardId !== null && entry.hidden !== true
+}
 
 export function moduleEnvVar(entry: ModuleEntry): string {
   return entry.envVar ?? `ID_MONDAY_${entry.key.toUpperCase()}`

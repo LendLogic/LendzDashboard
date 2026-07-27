@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest'
-import { MODULE_REGISTRY, moduleEnvVar, moduleStatusColumn, toBaselineModule } from './registry'
+import { MODULE_REGISTRY, isActiveEntry, moduleEnvVar, moduleStatusColumn, toBaselineModule } from './registry'
 import { ANALYZER_KEYS } from './readiness'
 
 function entryFor(key: string) {
@@ -55,10 +55,24 @@ test('appraisal is a registered analyzer reading its own board on registry defau
   expect(ANALYZER_KEYS).toContain('appraisal')
 })
 
-test('vt and tax stay boardless, so they stay hidden', () => {
+test('vt and tax are hidden on both counts: no board and the explicit switch', () => {
   for (const key of ['vt', 'tax']) {
     expect(entryFor(key).board ?? null).toBeNull()
+    expect(entryFor(key).hidden).toBe(true)
   }
+})
+
+test('hidden takes a module out even with a board id; without a board there is nothing to read', () => {
+  const entry = { key: 'demo', name: 'Demo' }
+  expect(isActiveEntry(entry, 123)).toBe(true)
+  expect(isActiveEntry({ ...entry, hidden: true }, 123)).toBe(false)
+  expect(isActiveEntry({ ...entry, hidden: false }, 123)).toBe(true)
+  expect(isActiveEntry(entry, null)).toBe(false)
+  expect(isActiveEntry({ ...entry, hidden: true }, null)).toBe(false)
+})
+
+test('exactly vt and tax ship hidden', () => {
+  expect(MODULE_REGISTRY.filter((e) => e.hidden).map((e) => e.key)).toEqual(['vt', 'tax'])
 })
 
 test('every registry key is unique', () => {
