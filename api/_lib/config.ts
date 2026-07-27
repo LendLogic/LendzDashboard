@@ -2,6 +2,7 @@ import type { Status } from '../../shared/readiness.js'
 import {
   DEFAULT_STATUS_COLUMN,
   MODULE_REGISTRY,
+  isActiveEntry,
   moduleEnvVar,
   moduleStatusColumn,
   type ModuleEntry,
@@ -58,8 +59,11 @@ export function getModuleStatusColumnId(key: ModuleKey): string {
   return entry ? moduleStatusColumn(entry) : DEFAULT_STATUS_COLUMN
 }
 
-export function boardBackedKeys(): ModuleKey[] {
-  return MODULE_ORDER.filter((k) => getModuleBoardId(k) != null)
+// The modules that produce a live card: board wired and not hidden. Drives which
+// boards the refresh fetches and which modules the payload carries, so a hidden
+// module costs no Monday call and cannot reach any rollup.
+export function activeModuleKeys(): ModuleKey[] {
+  return MODULE_REGISTRY.filter((e) => isActiveEntry(e, getModuleBoardId(e.key))).map((e) => e.key)
 }
 
 export type Bucket = 'delivered' | 'inProgress' | 'remaining'
