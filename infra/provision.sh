@@ -11,7 +11,7 @@ set -euo pipefail
 RESOURCE_GROUP="lendz-dashboard-rg"
 LOCATION="eastus"
 ACR_NAME="lendzdashboardacr"          # must be globally unique, alphanumeric only
-STORAGE_ACCOUNT="lendzdashboardstore" # must be globally unique, 3-24 lowercase alnum
+STORAGE_ACCOUNT="lendzdashboardsa"    # must be globally unique, 3-24 lowercase alnum
 BLOB_CONTAINER="readiness"
 ENVIRONMENT="lendz-dashboard-env"     # Container Apps environment
 CONTAINERAPP_NAME="lendz-dashboard"
@@ -21,23 +21,16 @@ IMAGE="lendz-dashboard:latest"
 
 # ---------------------------------------------------------------------------
 # Monday.com configuration — MONDAY_API_TOKEN is stored as a Container Apps
-# secret and referenced by both the app and the job; board ids are plain
-# (non-secret) env vars. Export MONDAY_API_TOKEN before running, or edit here.
+# secret and referenced by both the app and the job.
+#
+# Board ids are NOT set here. They live in shared/registry.ts, which is the
+# single source of truth, and reach production with the image. Setting them as
+# env vars too gave two sources that drift silently: the env var wins at runtime,
+# so a board change in code would appear to work and change nothing.
+# ID_MONDAY_<KEY> still overrides the registry at runtime — keep it unset, and
+# reach for it only to repoint a board without waiting for a deploy.
 # ---------------------------------------------------------------------------
 MONDAY_API_TOKEN="${MONDAY_API_TOKEN:-REPLACE_WITH_MONDAY_TOKEN}"
-ID_MONDAY_PE="18420951236"
-ID_MONDAY_UW="18420951193"
-ID_MONDAY_BANK="18420951194"
-ID_MONDAY_ID="18420951197"
-ID_MONDAY_PL="18420951201"
-ID_MONDAY_PAYSTUB="18420951200"
-# The Broker LOS board is shared and feeds both the broker and lexi modules.
-ID_MONDAY_LEXI="18420631446"
-ID_MONDAY_BROKER="18420631446"
-# Optional boards — set once the board exists, then add them to COMMON_ENV below:
-# ID_MONDAY_VT=""
-# ID_MONDAY_APPRAISAL=""
-# ID_MONDAY_TAX=""
 
 # Build context is the repo root regardless of where this script is invoked from.
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -124,14 +117,6 @@ COMMON_ENV=(
   "AZURE_BLOB_CONTAINER=$BLOB_CONTAINER"
   "AZURE_CLIENT_ID=$IDENTITY_CLIENT_ID"
   "MONDAY_API_TOKEN=secretref:monday-api-token"
-  "ID_MONDAY_PE=$ID_MONDAY_PE"
-  "ID_MONDAY_UW=$ID_MONDAY_UW"
-  "ID_MONDAY_BANK=$ID_MONDAY_BANK"
-  "ID_MONDAY_ID=$ID_MONDAY_ID"
-  "ID_MONDAY_PL=$ID_MONDAY_PL"
-  "ID_MONDAY_PAYSTUB=$ID_MONDAY_PAYSTUB"
-  "ID_MONDAY_LEXI=$ID_MONDAY_LEXI"
-  "ID_MONDAY_BROKER=$ID_MONDAY_BROKER"
 )
 
 echo "==> [8/9] Creating container app '$CONTAINERAPP_NAME' (web, external ingress :3000)"

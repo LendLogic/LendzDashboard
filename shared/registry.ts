@@ -299,6 +299,7 @@ export const MODULE_REGISTRY = [
     key: 'appraisal',
     name: 'Appraisal Analyzer',
     analyzer: true,
+    board: 18423914149,
   }),
 
   defineModule({

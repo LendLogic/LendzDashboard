@@ -13,7 +13,10 @@ import {
 
 export function buildDeliveryModule(key: string, stories: RawStory[]): DeliveryModule {
   const base = MODULES_BY_KEY[key] as DeliveryModule
-  if (stories.length === 0) {
+  // A board without the configured status column returns a blank status for every
+  // story, which would roll up to a live-looking 0%. Indistinguishable from real
+  // zero progress, so stay assumed until at least one status is readable.
+  if (!stories.some((s) => s.status.trim() !== '')) {
     return { ...base, assumed: true, assumedLabel: base.assumedLabel ?? 'Awaiting board data' }
   }
 

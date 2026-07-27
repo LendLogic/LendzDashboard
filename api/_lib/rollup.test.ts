@@ -54,6 +54,27 @@ test('a module with no stories falls back to the assumed baseline', () => {
   expect(m.buckets).toBe((base as typeof m).buckets)
 })
 
+test('a board with no readable status column stays assumed instead of reporting a live 0%', () => {
+  const stories: RawStory[] = [
+    { id: '1', name: 'U-06-01 · Appraisal Evidence Ingestion', status: '', module: null },
+    { id: '2', name: 'U-06-03 · Structured Extraction', status: '  ', module: null },
+  ]
+  const m = buildDeliveryModule('appraisal', stories)
+  expect(m.assumed).toBe(true)
+  expect(m.assumedLabel).toBe('Awaiting board data')
+  expect(m.counts).toEqual({ delivered: 0, inProgress: 0, remaining: 0 })
+})
+
+test('one readable status is enough to go live; the blank ones still bucket as remaining', () => {
+  const stories: RawStory[] = [
+    { id: '1', name: 'Done story', status: 'Done', module: null },
+    { id: '2', name: 'Untagged story', status: '', module: null },
+  ]
+  const m = buildDeliveryModule('appraisal', stories)
+  expect(m.assumed).toBe(false)
+  expect(m.counts).toEqual({ delivered: 1, inProgress: 0, remaining: 1 })
+})
+
 test('zero-stories assumed: module without base assumedLabel gets fallback label, module with base label preserves it', () => {
   const pe = buildDeliveryModule('pe', [])
   expect(pe.assumed).toBe(true)
@@ -66,7 +87,7 @@ test('zero-stories assumed: module without base assumedLabel gets fallback label
 
 test('assembleLivePayload emits only board-backed modules in order, source live', () => {
   const p = assembleLivePayload({}, '2026-07-08T00:00:00Z')
-  expect(p.modules.map((m) => m.key)).toEqual(['pe', 'uw', 'lexi', 'broker', 'bank', 'id', 'pl', 'paystub'])
+  expect(p.modules.map((m) => m.key)).toEqual(['pe', 'uw', 'lexi', 'broker', 'bank', 'id', 'pl', 'paystub', 'appraisal'])
   expect(p.source).toBe('live')
   expect(p.builtAt).toBe('2026-07-08T00:00:00Z')
   expect(p.asOf).toBe('2026-07-08T00:00:00Z')
