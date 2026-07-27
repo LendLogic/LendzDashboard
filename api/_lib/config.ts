@@ -20,8 +20,10 @@ export const MODULE_ORDER = MODULE_REGISTRY.map((e) => e.key) as readonly Module
 const ENTRY_BY_KEY = new Map<string, ModuleEntry>(MODULE_REGISTRY.map((e) => [e.key, e]))
 
 // The Broker LOS board is shared: these Lexi-scoped items feed the `lexi` module,
-// the rest feed `broker`. Monday is not modified; routing lives here, keyed by item id.
-export const LEXI_BROKER_BOARD_ID = 18420631446
+// the rest feed `broker`. Monday is not modified; routing lives here, keyed by item
+// id. The board id itself comes from the registry, never a second literal — give
+// lexi its own board and this partition stops applying on its own.
+export const LEXI_BROKER_BOARD_ID: number | null = ENTRY_BY_KEY.get('broker')?.board ?? null
 const LEXI_ITEM_IDS: ReadonlySet<string> = new Set([
   '12451013226', // Lexi Intelligence — extract into a microservice
   '12482521999', // Generative UI
@@ -37,7 +39,7 @@ export function filterStoriesForModule(
   boardId: number,
   stories: RawStory[],
 ): RawStory[] {
-  if (boardId !== LEXI_BROKER_BOARD_ID) return stories
+  if (LEXI_BROKER_BOARD_ID === null || boardId !== LEXI_BROKER_BOARD_ID) return stories
   if (key === 'lexi') return stories.filter((s) => LEXI_ITEM_IDS.has(s.id))
   if (key === 'broker') return stories.filter((s) => !LEXI_ITEM_IDS.has(s.id))
   return stories

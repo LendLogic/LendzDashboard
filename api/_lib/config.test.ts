@@ -87,8 +87,8 @@ test('getModuleBoardId: default, env override, invalid/unset falls back to defau
 })
 
 test('getModuleBoardId is null for modules whose board does not exist yet', () => {
-  for (const k of ['vt', 'appraisal', 'tax'] as const) {
-    const env = { vt: 'ID_MONDAY_VT', appraisal: 'ID_MONDAY_APPRAISAL', tax: 'ID_MONDAY_TAX' }[k]
+  for (const k of ['vt', 'tax'] as const) {
+    const env = { vt: 'ID_MONDAY_VT', tax: 'ID_MONDAY_TAX' }[k]
     const orig = process.env[env]
     delete process.env[env]
     expect(getModuleBoardId(k)).toBeNull()
@@ -115,8 +115,21 @@ test('an env override makes a boardless module visible', () => {
   else process.env.ID_MONDAY_TAX = orig
 })
 
-test('boardBackedKeys are the eight board-backed modules in canonical order', () => {
-  expect(boardBackedKeys()).toEqual(['pe', 'uw', 'lexi', 'broker', 'bank', 'id', 'pl', 'paystub'])
+test('boardBackedKeys are the board-backed modules in canonical order', () => {
+  expect(boardBackedKeys()).toEqual(['pe', 'uw', 'lexi', 'broker', 'bank', 'id', 'pl', 'paystub', 'appraisal'])
+})
+
+test('appraisal reads its own dedicated board', () => {
+  const orig = process.env.ID_MONDAY_APPRAISAL
+  delete process.env.ID_MONDAY_APPRAISAL
+  expect(getModuleBoardId('appraisal')).toBe(18423914149)
+  expect(getModuleStatusColumnId('appraisal')).toBe('task_status')
+  if (orig === undefined) delete process.env.ID_MONDAY_APPRAISAL
+  else process.env.ID_MONDAY_APPRAISAL = orig
+})
+
+test('LEXI_BROKER_BOARD_ID comes from the registry, not a second literal', () => {
+  expect(LEXI_BROKER_BOARD_ID).toBe(18420631446)
 })
 
 test('filterStoriesForModule routes the Broker LOS board: lexi keeps the seven, broker keeps the complement', () => {
@@ -124,10 +137,10 @@ test('filterStoriesForModule routes the Broker LOS board: lexi keeps the seven, 
   const brokerStories = [story('99990'), story('99991')]
   const all = [...lexiStories, ...brokerStories]
 
-  const lexi = filterStoriesForModule('lexi', LEXI_BROKER_BOARD_ID, all)
+  const lexi = filterStoriesForModule('lexi', LEXI_BROKER_BOARD_ID!, all)
   expect(lexi.map((s) => s.id).sort()).toEqual([...LEXI_IDS].sort())
 
-  const broker = filterStoriesForModule('broker', LEXI_BROKER_BOARD_ID, all)
+  const broker = filterStoriesForModule('broker', LEXI_BROKER_BOARD_ID!, all)
   expect(broker.map((s) => s.id).sort()).toEqual(['99990', '99991'])
 
   // Exclusive partition: no id appears in both.
@@ -143,7 +156,7 @@ test('filterStoriesForModule returns the input unchanged on any other board', ()
 
 test('filterStoriesForModule returns the input unchanged for an unrelated key on the Broker LOS board', () => {
   const all = [story('12451013226'), story('99990')]
-  expect(filterStoriesForModule('pe', LEXI_BROKER_BOARD_ID, all)).toBe(all)
+  expect(filterStoriesForModule('pe', LEXI_BROKER_BOARD_ID!, all)).toBe(all)
 })
 
 test('SUBITEM_STATUS_COLUMN_ID is the Monday default status column id', () => {
