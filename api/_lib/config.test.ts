@@ -57,12 +57,12 @@ test('cleanTitle strips sprint and id prefixes but leaves plain titles', () => {
   expect(cleanTitle('CLTV calculation issue')).toBe('CLTV calculation issue')
 })
 
-test('ANALYZER_KEYS are bank/id/pl/paystub/tax', () => {
-  expect(ANALYZER_KEYS).toEqual(['bank', 'id', 'pl', 'paystub', 'tax'])
+test('ANALYZER_KEYS are the registry entries flagged as analyzers, in order', () => {
+  expect(ANALYZER_KEYS).toEqual(['bank', 'id', 'pl', 'paystub', 'appraisal', 'tax'])
 })
 
-test('MODULE_ORDER is the canonical ten-module order', () => {
-  expect(MODULE_ORDER).toEqual(['pe', 'vt', 'uw', 'lexi', 'broker', 'bank', 'id', 'pl', 'paystub', 'tax'])
+test('MODULE_ORDER is the canonical registry order', () => {
+  expect(MODULE_ORDER).toEqual(['pe', 'vt', 'uw', 'lexi', 'broker', 'bank', 'id', 'pl', 'paystub', 'appraisal', 'tax'])
 })
 
 test('getModuleStatusColumnId defaults to task_status; broker and lexi read the status column', () => {
@@ -87,8 +87,8 @@ test('getModuleBoardId: default, env override, invalid/unset falls back to defau
 })
 
 test('getModuleBoardId is null for modules whose board does not exist yet', () => {
-  for (const k of ['vt', 'tax'] as const) {
-    const env = { vt: 'ID_MONDAY_VT', tax: 'ID_MONDAY_TAX' }[k]
+  for (const k of ['vt', 'appraisal', 'tax'] as const) {
+    const env = { vt: 'ID_MONDAY_VT', appraisal: 'ID_MONDAY_APPRAISAL', tax: 'ID_MONDAY_TAX' }[k]
     const orig = process.env[env]
     delete process.env[env]
     expect(getModuleBoardId(k)).toBeNull()

@@ -19,6 +19,15 @@ test('renders the first module, then navigates into the Analyzers section', asyn
   await waitFor(() => expect(screen.getAllByText('Bank Statement Analyzer')).toHaveLength(2))
 })
 
+test('a registry-only analyzer renders its card with no component changes', async () => {
+  render(<App />)
+  await waitFor(() => expect(screen.getAllByText('Pricing & Eligibility')).toHaveLength(2))
+  await userEvent.click(screen.getByRole('tab', { name: /Analyzers/ }))
+  await userEvent.click(screen.getByRole('tab', { name: /Appraisal Analyzer/ }))
+  await waitFor(() => expect(screen.getAllByText('Appraisal Analyzer')).toHaveLength(2))
+  expect(screen.getByText('Awaiting board data')).toBeInTheDocument()
+})
+
 test('shows an error card when the fetch fails', async () => {
   const { fetchReadiness } = await import('./api')
   vi.mocked(fetchReadiness).mockRejectedValueOnce(new Error('boom'))
