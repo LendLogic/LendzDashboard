@@ -8,7 +8,7 @@ import {
   MODULE_ORDER,
   getModuleBoardId,
   getModuleStatusColumnId,
-  boardBackedKeys,
+  activeModuleKeys,
   filterStoriesForModule,
   LEXI_BROKER_BOARD_ID,
   SUBITEM_STATUS_COLUMN_ID,
@@ -110,13 +110,18 @@ test('an env override makes a boardless module visible', () => {
   expect(getModuleBoardId('tax')).toBeNull()
   process.env.ID_MONDAY_TAX = '12345'
   expect(getModuleBoardId('tax')).toBe(12345)
-  expect(boardBackedKeys()).toContain('tax')
+  expect(activeModuleKeys()).toContain('tax')
   if (orig === undefined) delete process.env.ID_MONDAY_TAX
   else process.env.ID_MONDAY_TAX = orig
 })
 
-test('boardBackedKeys are the board-backed modules in canonical order', () => {
-  expect(boardBackedKeys()).toEqual(['pe', 'uw', 'lexi', 'broker', 'bank', 'id', 'pl', 'paystub', 'appraisal'])
+test('activeModuleKeys are the board-backed, non-hidden modules in canonical order', () => {
+  expect(activeModuleKeys()).toEqual(['pe', 'uw', 'lexi', 'broker', 'bank', 'id', 'pl', 'paystub', 'appraisal'])
+})
+
+test('no module ships hidden, so activeModuleKeys is exactly the board-backed set', () => {
+  const boardBacked = MODULE_ORDER.filter((k) => getModuleBoardId(k) != null)
+  expect(activeModuleKeys()).toEqual(boardBacked)
 })
 
 test('appraisal reads its own dedicated board', () => {

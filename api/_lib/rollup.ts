@@ -7,7 +7,7 @@ import {
   cleanSubtaskTitle,
   statusFromPercent,
   STATUS_LABELS,
-  boardBackedKeys,
+  activeModuleKeys,
   type ModuleKey,
 } from './config.js'
 
@@ -59,6 +59,6 @@ export function assembleLivePayload(
   storiesByModule: Partial<Record<ModuleKey, RawStory[]>>,
   now: string,
 ): ReadinessPayload {
-  const modules: Module[] = boardBackedKeys().map((k) => buildDeliveryModule(k, storiesByModule[k] ?? []))
+  const modules: Module[] = activeModuleKeys().map((k) => buildDeliveryModule(k, storiesByModule[k] ?? []))
   return { asOf: now, builtAt: now, source: 'live', modules }
 }
