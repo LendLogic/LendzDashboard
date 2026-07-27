@@ -296,6 +296,12 @@ export const MODULE_REGISTRY = [
   }),
 
   defineModule({
+    key: 'appraisal',
+    name: 'Appraisal Analyzer',
+    analyzer: true,
+  }),
+
+  defineModule({
     key: 'tax',
     name: 'Tax Docs Analyzer',
     analyzer: true,

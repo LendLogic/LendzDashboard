@@ -36,6 +36,7 @@ ID_MONDAY_LEXI="18420631446"
 ID_MONDAY_BROKER="18420631446"
 # Optional boards — set once the board exists, then add them to COMMON_ENV below:
 # ID_MONDAY_VT=""
+# ID_MONDAY_APPRAISAL=""
 # ID_MONDAY_TAX=""
 
 # Build context is the repo root regardless of where this script is invoked from.

@@ -445,6 +445,30 @@ exports[`baseline modules payload is unchanged 1`] = `
     }
   },
   {
+    "key": "appraisal",
+    "name": "Appraisal Analyzer",
+    "sub": "Document-extraction analyzer. Build progress from the Analyzers workstream.",
+    "phase": "delivery",
+    "percent": 0,
+    "status": "early",
+    "statusLabel": "Early build",
+    "note": "Dedicated board just seeded. Figures assumed until stories land.",
+    "targetDate": "Release Two",
+    "dateConfidence": "projected",
+    "assumed": true,
+    "assumedLabel": "Awaiting board data",
+    "counts": {
+      "delivered": 0,
+      "inProgress": 0,
+      "remaining": 0
+    },
+    "buckets": {
+      "delivered": [],
+      "inProgress": [],
+      "remaining": []
+    }
+  },
+  {
     "key": "tax",
     "name": "Tax Docs Analyzer",
     "sub": "Tax form extraction. Planned for Release Two.",

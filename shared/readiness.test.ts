@@ -1,16 +1,16 @@
 import { MODULES, ANALYZER_KEYS, buildPayload } from './readiness'
 
-test('exposes ten modules in tab order', () => {
-  expect(MODULES.map((m) => m.key)).toEqual(['pe', 'vt', 'uw', 'lexi', 'broker', 'bank', 'id', 'pl', 'paystub', 'tax'])
+test('exposes every registry module in tab order', () => {
+  expect(MODULES.map((m) => m.key)).toEqual(['pe', 'vt', 'uw', 'lexi', 'broker', 'bank', 'id', 'pl', 'paystub', 'appraisal', 'tax'])
 })
 
 test('flags exactly the assumed modules', () => {
   const assumed = MODULES.filter((m) => m.assumed).map((m) => m.key)
-  expect(assumed.sort()).toEqual(['bank', 'broker', 'id', 'paystub', 'pl', 'tax', 'vt'])
+  expect(assumed.sort()).toEqual(['appraisal', 'bank', 'broker', 'id', 'paystub', 'pl', 'tax', 'vt'])
 })
 
-test('ANALYZER_KEYS lists the five analyzers in order', () => {
-  expect(ANALYZER_KEYS).toEqual(['bank', 'id', 'pl', 'paystub', 'tax'])
+test('ANALYZER_KEYS lists the analyzers in order', () => {
+  expect(ANALYZER_KEYS).toEqual(['bank', 'id', 'pl', 'paystub', 'appraisal', 'tax'])
 })
 
 test('pe/uw/broker carry an editorial brief; uw has expandable detail', () => {
