@@ -73,6 +73,18 @@ export function creditedPercent(delivered: number, inProgress: number, total: nu
   return Math.round(((delivered + inProgress * IN_PROGRESS_CREDIT) / total) * 100)
 }
 
+// Barely-started work reads as noise on an executive console, so a module stays
+// off the tabs, off the cards and out of every rollup until it clears this floor.
+// Presentational only: the payload keeps carrying the module.
+export const MIN_VISIBLE_PERCENT = 10
+
+// An assumed percent is an editorial placeholder, not a measurement — a module
+// with no authored baseline sits at 0 no matter how far along it really is, so the
+// floor only judges modules whose figures came from their board.
+export function visibleModules(modules: Module[]): Module[] {
+  return modules.filter((m) => m.assumed || m.percent >= MIN_VISIBLE_PERCENT)
+}
+
 export function buildPayload(now: string): ReadinessPayload {
   return { asOf: now, modules: MODULES, source: 'baseline' }
 }
