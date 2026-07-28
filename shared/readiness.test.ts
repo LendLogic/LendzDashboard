@@ -1,4 +1,12 @@
-import { MODULES, ANALYZER_KEYS, buildPayload } from './readiness'
+import { MODULES, ANALYZER_KEYS, buildPayload, visibleModules, MIN_VISIBLE_PERCENT } from './readiness'
+import type { Module } from './readiness'
+
+const at = (key: string, percent: number, extra: Partial<Module> = {}): Module => ({
+  ...MODULES[0],
+  key,
+  percent,
+  ...extra,
+})
 
 test('exposes every registry module in tab order', () => {
   expect(MODULES.map((m) => m.key)).toEqual(['pe', 'vt', 'uw', 'lexi', 'broker', 'bank', 'id', 'pl', 'paystub', 'appraisal', 'tax'])
@@ -44,6 +52,20 @@ test('lexi and the four analyzers carry Go/No-Go and Go Live dates', () => {
 test('bank is a delivery module', () => {
   const bank = MODULES.find((m) => m.key === 'bank')!
   expect(bank.phase).toBe('delivery')
+})
+
+test('MIN_VISIBLE_PERCENT is the 10 percent floor', () => {
+  expect(MIN_VISIBLE_PERCENT).toBe(10)
+})
+
+test('visibleModules drops modules below the floor and keeps the floor itself', () => {
+  const mods = [at('zero', 0), at('under', 9), at('floor', 10), at('over', 71)]
+  expect(visibleModules(mods).map((m) => m.key)).toEqual(['floor', 'over'])
+})
+
+test('visibleModules exempts assumed modules from the floor', () => {
+  const mods = [at('seeded', 0, { assumed: true }), at('under', 9), at('floor', 10)]
+  expect(visibleModules(mods).map((m) => m.key)).toEqual(['seeded', 'floor'])
 })
 
 test('buildPayload stamps asOf and returns the modules', () => {
