@@ -32,6 +32,16 @@ IMAGE="lendz-dashboard:latest"
 # ---------------------------------------------------------------------------
 MONDAY_API_TOKEN="${MONDAY_API_TOKEN:-REPLACE_WITH_MONDAY_TOKEN}"
 
+# The placeholder is non-empty, so the app accepts it and every board 401s instead of
+# failing loudly. It reached the web container's secret once and stayed there unnoticed
+# until a manual refresh surfaced it, so refuse to provision with it.
+if [ "$MONDAY_API_TOKEN" = "REPLACE_WITH_MONDAY_TOKEN" ]; then
+  echo "ERROR: MONDAY_API_TOKEN is still the placeholder." >&2
+  echo "Export the real Monday token before provisioning:" >&2
+  echo "  MONDAY_API_TOKEN='<token>' $0" >&2
+  exit 1
+fi
+
 # Build context is the repo root regardless of where this script is invoked from.
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
