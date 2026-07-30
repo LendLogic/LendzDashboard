@@ -33,6 +33,22 @@ test('GET /api/readiness serves the baseline payload with noindex + no-store', a
   expect(Array.isArray(body.modules)).toBe(true)
 })
 
+// No MONDAY_API_TOKEN here, so runRefresh throws before it can reach Monday: the
+// 500 proves the route is wired without the test doing any real network work.
+test('POST /api/refresh is mounted and answers JSON', async () => {
+  const orig = process.env.MONDAY_API_TOKEN
+  delete process.env.MONDAY_API_TOKEN
+  const res = await fetch(`${base}/api/refresh`, { method: 'POST' })
+  expect(res.status).toBe(500)
+  expect((await res.json()) as { error: string }).toEqual({ error: 'MONDAY_API_TOKEN is not set' })
+  if (orig !== undefined) process.env.MONDAY_API_TOKEN = orig
+})
+
+test('GET /api/refresh does not trigger a refresh', async () => {
+  const res = await fetch(`${base}/api/refresh`)
+  expect(res.status).toBe(404)
+})
+
 test('unknown non-API route falls back to index.html (SPA)', async () => {
   const res = await fetch(`${base}/some/deep/client/route`)
   expect(res.status).toBe(200)

@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import type { ReadinessPayload } from '../shared/readiness'
 import { MIN_VISIBLE_PERCENT, visibleModules } from '../shared/readiness'
 import { fetchReadiness } from './api'
 import { Masthead } from './components/Masthead'
+import { RefreshButton } from './components/RefreshButton'
 import { Tabs } from './components/Tabs'
 import type { TabItem } from './components/Tabs'
 import { DeliveryPanel } from './components/DeliveryPanel'
@@ -18,15 +19,19 @@ export default function App() {
   const [activeSection, setActiveSection] = useState<string | null>(null)
   const [activeAnalyzer, setActiveAnalyzer] = useState<string>(OVERVIEW)
 
-  useEffect(() => {
-    const ctrl = new AbortController()
-    fetchReadiness(ctrl.signal)
+  const load = useCallback((signal?: AbortSignal) => {
+    return fetchReadiness(signal)
       .then(setPayload)
       .catch((e: Error) => {
         if (e.name !== 'AbortError') setError(e.message)
       })
-    return () => ctrl.abort()
   }, [])
+
+  useEffect(() => {
+    const ctrl = new AbortController()
+    void load(ctrl.signal)
+    return () => ctrl.abort()
+  }, [load])
 
   if (error) {
     return <div className="wrap"><div className="card">Could not load the console: {error}</div></div>
@@ -35,11 +40,12 @@ export default function App() {
     return <div className="wrap"><div className="card">Loading…</div></div>
   }
 
+  const refresh = <RefreshButton onRefreshed={load} />
   const { delivery, analyzers } = partitionModules(visibleModules(payload.modules))
   if (!delivery.length && !analyzers.length) {
     return (
       <div className="wrap">
-        <Masthead asOf={payload.asOf} />
+        <Masthead asOf={payload.asOf} action={refresh} />
         <div className="card">No modules are above {MIN_VISIBLE_PERCENT}% readiness yet.</div>
       </div>
     )
@@ -59,7 +65,7 @@ export default function App() {
 
   return (
     <div className="wrap">
-      <Masthead asOf={payload.asOf} />
+      <Masthead asOf={payload.asOf} action={refresh} />
       <Tabs items={topItems} activeKey={section} onSelect={setActiveSection} />
       {section === ANALYZERS_SECTION ? (
         <>
