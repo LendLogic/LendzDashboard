@@ -222,6 +222,14 @@ export const MODULE_REGISTRY = [
   }),
 
   defineModule({
+    key: 'docmagic',
+    name: 'DocMagic Integration',
+    sub: 'Document generation and eSign for the 1003, Loan Estimate and Closing Disclosure.',
+    board: 18424466007,
+    statusColumn: 'color_mm5rstxa',
+  }),
+
+  defineModule({
     key: 'bank',
     name: 'Bank Statement Analyzer',
     analyzer: true,

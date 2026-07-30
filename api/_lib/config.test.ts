@@ -62,16 +62,17 @@ test('ANALYZER_KEYS are the registry entries flagged as analyzers, in order', ()
 })
 
 test('MODULE_ORDER is the canonical registry order', () => {
-  expect(MODULE_ORDER).toEqual(['pe', 'vt', 'uw', 'lexi', 'broker', 'bank', 'id', 'pl', 'paystub', 'appraisal', 'credit', 'tax'])
+  expect(MODULE_ORDER).toEqual(['pe', 'vt', 'uw', 'lexi', 'broker', 'docmagic', 'bank', 'id', 'pl', 'paystub', 'appraisal', 'credit', 'tax'])
 })
 
-test('getModuleStatusColumnId defaults to task_status; broker, lexi and credit declare their own', () => {
+test('getModuleStatusColumnId defaults to task_status; broker, lexi, credit and docmagic declare their own', () => {
   expect(getModuleStatusColumnId('pe')).toBe('task_status')
   expect(getModuleStatusColumnId('uw')).toBe('task_status')
   expect(getModuleStatusColumnId('bank')).toBe('task_status')
   expect(getModuleStatusColumnId('broker')).toBe('status')
   expect(getModuleStatusColumnId('lexi')).toBe('status')
   expect(getModuleStatusColumnId('credit')).toBe('color_mm5qegn')
+  expect(getModuleStatusColumnId('docmagic')).toBe('color_mm5rstxa')
 })
 
 test('getModuleBoardId: default, env override, invalid/unset falls back to default', () => {
@@ -120,6 +121,7 @@ test('activeModuleKeys are the board-backed, non-hidden modules in canonical ord
     'uw',
     'lexi',
     'broker',
+    'docmagic',
     'bank',
     'id',
     'pl',

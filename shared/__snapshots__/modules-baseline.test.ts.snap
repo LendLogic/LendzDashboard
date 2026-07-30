@@ -311,6 +311,30 @@ exports[`baseline modules payload is unchanged 1`] = `
     }
   },
   {
+    "key": "docmagic",
+    "name": "DocMagic Integration",
+    "sub": "Document generation and eSign for the 1003, Loan Estimate and Closing Disclosure.",
+    "phase": "delivery",
+    "percent": 0,
+    "status": "early",
+    "statusLabel": "Early build",
+    "note": "Dedicated board just seeded. Figures assumed until stories land.",
+    "targetDate": "Release Two",
+    "dateConfidence": "projected",
+    "assumed": true,
+    "assumedLabel": "Awaiting board data",
+    "counts": {
+      "delivered": 0,
+      "inProgress": 0,
+      "remaining": 0
+    },
+    "buckets": {
+      "delivered": [],
+      "inProgress": [],
+      "remaining": []
+    }
+  },
+  {
     "key": "bank",
     "name": "Bank Statement Analyzer",
     "sub": "Document-extraction analyzer. Build progress from the Analyzers workstream.",
