@@ -1,4 +1,6 @@
-export function Masthead({ asOf }: { asOf: string }) {
+import type { ReactNode } from 'react'
+
+export function Masthead({ asOf, action }: { asOf: string; action?: ReactNode }) {
   const when = new Date(asOf).toLocaleString()
   return (
     <div className="masthead">
@@ -9,6 +11,7 @@ export function Masthead({ asOf }: { asOf: string }) {
       <div className="asof">
         as of
         <b>{when}</b>
+        {action}
       </div>
     </div>
   )
