@@ -105,9 +105,33 @@ test('the lock is released after a failure, so the next caller can retry', async
   const failed = mockRes()
   await handler(post(), failed as unknown as Response)
   expect(failed.statusCode).toBe(500)
-  expect(failed.body).toEqual({ error: 'all Monday board fetches failed' })
 
   const retry = mockRes()
   await handler(post(), retry as unknown as Response)
   expect(retry.statusCode).toBe(200)
+})
+
+// The endpoint is public, so an internal message would publish env var and account
+// names to anyone who clicks. The operator gets the real reason from the logs.
+test('a total Monday failure reports an operational reason, not the internal one', async () => {
+  const spy = vi.spyOn(console, 'error').mockImplementation(() => {})
+  vi.mocked(runRefresh).mockRejectedValueOnce(new Error('all Monday board fetches failed'))
+  const res = mockRes()
+  await handler(post(), res as unknown as Response)
+  expect(res.statusCode).toBe(500)
+  expect(res.body).toEqual({ error: 'Monday data unavailable' })
+  expect(String(spy.mock.calls[0]?.[0])).toContain('all Monday board fetches failed')
+  spy.mockRestore()
+})
+
+test('any other failure is generic outward and detailed in the logs', async () => {
+  const spy = vi.spyOn(console, 'error').mockImplementation(() => {})
+  vi.mocked(runRefresh).mockRejectedValueOnce(new Error('MONDAY_API_TOKEN is not set'))
+  const res = mockRes()
+  await handler(post(), res as unknown as Response)
+  expect(res.statusCode).toBe(500)
+  expect(res.body).toEqual({ error: 'unexpected server error' })
+  expect(JSON.stringify(res.body)).not.toContain('MONDAY_API_TOKEN')
+  expect(String(spy.mock.calls[0]?.[0])).toContain('MONDAY_API_TOKEN is not set')
+  spy.mockRestore()
 })

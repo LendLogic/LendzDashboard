@@ -10,6 +10,14 @@ export const REFRESH_COOLDOWN_SECONDS = 60
 // only protects the replica it lives in.
 let inFlight = false
 
+// Public endpoint: an internal message would publish env var and storage account names
+// to anyone who clicks. Operational causes get wording an operator can act on; the real
+// message always goes to the container logs.
+function publicError(raw: string): string {
+  if (raw.includes('all Monday board fetches failed')) return 'Monday data unavailable'
+  return 'unexpected server error'
+}
+
 function ageInSeconds(builtAt: string | undefined): number | null {
   if (!builtAt) return null
   const built = Date.parse(builtAt)
@@ -37,7 +45,9 @@ export default async function handler(_req: Request, res: Response) {
     const { modules, builtAt } = await runRefresh()
     res.status(200).json({ ok: true, modules, builtAt })
   } catch (e: unknown) {
-    res.status(500).json({ error: e instanceof Error ? e.message : String(e) })
+    const raw = e instanceof Error ? e.message : String(e)
+    console.error(`refresh: request failed: ${raw}`)
+    res.status(500).json({ error: publicError(raw) })
   } finally {
     inFlight = false
   }

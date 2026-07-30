@@ -22,11 +22,17 @@ export async function runRefresh(): Promise<RefreshResult> {
   const token = getMondayToken()
   const keys = activeModuleKeys()
   const results = await Promise.all(
-    keys.map((k) =>
-      fetchBoardStories({ token, boardId: getModuleBoardId(k)!, statusColumnId: getModuleStatusColumnId(k) })
+    keys.map((k) => {
+      const boardId = getModuleBoardId(k)!
+      return fetchBoardStories({ token, boardId, statusColumnId: getModuleStatusColumnId(k) })
         .then((stories) => ({ k, stories: stories as RawStory[] | null }))
-        .catch(() => ({ k, stories: null as RawStory[] | null })),
-    ),
+        .catch((e: unknown) => {
+          // Without this the module just goes quiet: the caller sees one summary error and
+          // has no way to tell a revoked token from a renamed board.
+          console.error(`refresh: ${k} board ${boardId} failed: ${e instanceof Error ? e.message : String(e)}`)
+          return { k, stories: null as RawStory[] | null }
+        })
+    }),
   )
   // A single decommissioned/renamed board must not sink the whole refresh, but a
   // total failure (bad token / Monday down) must not clobber the last-good blob.

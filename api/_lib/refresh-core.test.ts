@@ -93,3 +93,36 @@ test('all boards failing throws and does NOT write the blob', async () => {
   await expect(runRefresh()).rejects.toThrow(/all Monday board fetches failed/)
   expect(writeLatest).not.toHaveBeenCalled()
 })
+
+// Swallowing the per-board reason left "all Monday board fetches failed" as the only
+// evidence of a total failure, which sent a real diagnosis (a bad token on the web
+// container, 2026-07-30) into guesswork.
+test('a failing board names itself, its module and its reason in the logs', async () => {
+  const errs: string[] = []
+  const spy = vi.spyOn(console, 'error').mockImplementation((m: unknown) => void errs.push(String(m)))
+  vi.mocked(fetchBoardStories).mockImplementation((opts: { boardId: number }) =>
+    opts.boardId === 18420951193
+      ? Promise.reject(new Error('Monday API HTTP 401'))
+      : Promise.resolve([{ id: 'x', name: 'X', status: 'Done', module: null }]),
+  )
+
+  await runRefresh()
+
+  expect(errs).toHaveLength(1)
+  expect(errs[0]).toContain('uw')
+  expect(errs[0]).toContain('18420951193')
+  expect(errs[0]).toContain('Monday API HTTP 401')
+  spy.mockRestore()
+})
+
+test('every board failing logs every reason, not just the summary', async () => {
+  const errs: string[] = []
+  const spy = vi.spyOn(console, 'error').mockImplementation((m: unknown) => void errs.push(String(m)))
+  vi.mocked(fetchBoardStories).mockRejectedValue(new Error('Monday API HTTP 401'))
+
+  await expect(runRefresh()).rejects.toThrow(/all Monday board fetches failed/)
+
+  expect(errs).toHaveLength(11)
+  expect(errs.every((e) => e.includes('Monday API HTTP 401'))).toBe(true)
+  spy.mockRestore()
+})
