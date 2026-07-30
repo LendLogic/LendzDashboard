@@ -304,8 +304,12 @@ export const MODULE_REGISTRY = [
     key: 'appraisal',
     name: 'Appraisal Analyzer',
     analyzer: true,
+    sub: 'Property valuation and collateral data extraction from appraisal reports.',
     board: 18423914149,
-    hidden: true,
+    brief: {
+      goNoGo: 'Aug 3',
+      goLive: 'Aug 8',
+    },
   }),
 
   defineModule({
