@@ -313,6 +313,19 @@ export const MODULE_REGISTRY = [
   }),
 
   defineModule({
+    key: 'credit',
+    name: 'Credit Report Analyzer',
+    analyzer: true,
+    sub: 'Direct credit data retrieval from bureau providers.',
+    board: 18424174374,
+    statusColumn: 'color_mm5qegn',
+    brief: {
+      goNoGo: 'Aug 3',
+      goLive: 'Aug 8',
+    },
+  }),
+
+  defineModule({
     key: 'tax',
     name: 'Tax Docs Analyzer',
     analyzer: true,

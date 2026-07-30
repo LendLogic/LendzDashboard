@@ -58,19 +58,20 @@ test('cleanTitle strips sprint and id prefixes but leaves plain titles', () => {
 })
 
 test('ANALYZER_KEYS are the registry entries flagged as analyzers, in order', () => {
-  expect(ANALYZER_KEYS).toEqual(['bank', 'id', 'pl', 'paystub', 'appraisal', 'tax'])
+  expect(ANALYZER_KEYS).toEqual(['bank', 'id', 'pl', 'paystub', 'appraisal', 'credit', 'tax'])
 })
 
 test('MODULE_ORDER is the canonical registry order', () => {
-  expect(MODULE_ORDER).toEqual(['pe', 'vt', 'uw', 'lexi', 'broker', 'bank', 'id', 'pl', 'paystub', 'appraisal', 'tax'])
+  expect(MODULE_ORDER).toEqual(['pe', 'vt', 'uw', 'lexi', 'broker', 'bank', 'id', 'pl', 'paystub', 'appraisal', 'credit', 'tax'])
 })
 
-test('getModuleStatusColumnId defaults to task_status; broker and lexi read the status column', () => {
+test('getModuleStatusColumnId defaults to task_status; broker, lexi and credit declare their own', () => {
   expect(getModuleStatusColumnId('pe')).toBe('task_status')
   expect(getModuleStatusColumnId('uw')).toBe('task_status')
   expect(getModuleStatusColumnId('bank')).toBe('task_status')
   expect(getModuleStatusColumnId('broker')).toBe('status')
   expect(getModuleStatusColumnId('lexi')).toBe('status')
+  expect(getModuleStatusColumnId('credit')).toBe('color_mm5qegn')
 })
 
 test('getModuleBoardId: default, env override, invalid/unset falls back to default', () => {
@@ -124,6 +125,7 @@ test('activeModuleKeys are the board-backed, non-hidden modules in canonical ord
     'pl',
     'paystub',
     'appraisal',
+    'credit',
   ])
 })
 

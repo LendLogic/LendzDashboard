@@ -9,16 +9,16 @@ const at = (key: string, percent: number, extra: Partial<Module> = {}): Module =
 })
 
 test('exposes every registry module in tab order', () => {
-  expect(MODULES.map((m) => m.key)).toEqual(['pe', 'vt', 'uw', 'lexi', 'broker', 'bank', 'id', 'pl', 'paystub', 'appraisal', 'tax'])
+  expect(MODULES.map((m) => m.key)).toEqual(['pe', 'vt', 'uw', 'lexi', 'broker', 'bank', 'id', 'pl', 'paystub', 'appraisal', 'credit', 'tax'])
 })
 
 test('flags exactly the assumed modules', () => {
   const assumed = MODULES.filter((m) => m.assumed).map((m) => m.key)
-  expect(assumed.sort()).toEqual(['appraisal', 'bank', 'broker', 'id', 'paystub', 'pl', 'tax', 'vt'])
+  expect(assumed.sort()).toEqual(['appraisal', 'bank', 'broker', 'credit', 'id', 'paystub', 'pl', 'tax', 'vt'])
 })
 
 test('ANALYZER_KEYS lists the analyzers in order', () => {
-  expect(ANALYZER_KEYS).toEqual(['bank', 'id', 'pl', 'paystub', 'appraisal', 'tax'])
+  expect(ANALYZER_KEYS).toEqual(['bank', 'id', 'pl', 'paystub', 'appraisal', 'credit', 'tax'])
 })
 
 test('pe/uw/broker carry an editorial brief; uw has expandable detail', () => {
