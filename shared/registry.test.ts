@@ -47,14 +47,22 @@ test('status column defaults to task_status; broker and lexi declare status', ()
   expect(moduleStatusColumn(entryFor('lexi'))).toBe('status')
 })
 
-test('appraisal keeps its board wired while hidden, so unhiding it needs no other change', () => {
+test('appraisal ships visible, reading its own board', () => {
   const appraisal = entryFor('appraisal')
   expect(appraisal.analyzer).toBe(true)
   expect(appraisal.board).toBe(18423914149)
   expect(moduleStatusColumn(appraisal)).toBe('task_status')
-  expect(appraisal.hidden).toBe(true)
-  expect(isActiveEntry(appraisal, appraisal.board!)).toBe(false)
+  expect(appraisal.hidden).toBeUndefined()
+  expect(isActiveEntry(appraisal, appraisal.board!)).toBe(true)
   expect(ANALYZER_KEYS).toContain('appraisal')
+})
+
+test('appraisal carries its own sub and milestone dates', () => {
+  const appraisal = entryFor('appraisal')
+  expect(appraisal.sub).toBe(
+    'Property valuation and collateral data extraction from appraisal reports.',
+  )
+  expect(appraisal.brief).toEqual({ goNoGo: 'Aug 3', goLive: 'Aug 8' })
 })
 
 test('vt and tax are hidden on both counts: no board and the explicit switch', () => {
@@ -73,8 +81,8 @@ test('hidden takes a module out even with a board id; without a board there is n
   expect(isActiveEntry({ ...entry, hidden: true }, null)).toBe(false)
 })
 
-test('exactly vt, appraisal and tax ship hidden', () => {
-  expect(MODULE_REGISTRY.filter((e) => e.hidden).map((e) => e.key)).toEqual(['vt', 'appraisal', 'tax'])
+test('exactly vt and tax ship hidden', () => {
+  expect(MODULE_REGISTRY.filter((e) => e.hidden).map((e) => e.key)).toEqual(['vt', 'tax'])
 })
 
 test('every registry key is unique', () => {

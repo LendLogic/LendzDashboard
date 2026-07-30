@@ -114,14 +114,23 @@ test('a hidden module stays out even when a board id arrives — the switch outr
 })
 
 test('activeModuleKeys are the board-backed, non-hidden modules in canonical order', () => {
-  expect(activeModuleKeys()).toEqual(['pe', 'uw', 'lexi', 'broker', 'bank', 'id', 'pl', 'paystub'])
+  expect(activeModuleKeys()).toEqual([
+    'pe',
+    'uw',
+    'lexi',
+    'broker',
+    'bank',
+    'id',
+    'pl',
+    'paystub',
+    'appraisal',
+  ])
 })
 
-test('a hidden module with a live board id is board-backed yet inactive', () => {
+test('every board-backed module is active now that appraisal is visible', () => {
   const boardBacked = MODULE_ORDER.filter((k) => getModuleBoardId(k) != null)
   expect(boardBacked).toContain('appraisal')
-  expect(activeModuleKeys()).not.toContain('appraisal')
-  expect(activeModuleKeys()).toEqual(boardBacked.filter((k) => k !== 'appraisal'))
+  expect(activeModuleKeys()).toEqual(boardBacked)
 })
 
 test('appraisal reads its own dedicated board', () => {
