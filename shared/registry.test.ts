@@ -57,6 +57,16 @@ test('appraisal ships visible, reading its own board', () => {
   expect(ANALYZER_KEYS).toContain('appraisal')
 })
 
+test('docmagic is a delivery module, not an analyzer, and declares its status column', () => {
+  const docmagic = entryFor('docmagic')
+  expect(docmagic.analyzer).toBeUndefined()
+  expect(ANALYZER_KEYS).not.toContain('docmagic')
+  expect(docmagic.board).toBe(18424466007)
+  expect(moduleStatusColumn(docmagic)).toBe('color_mm5rstxa')
+  expect(docmagic.hidden).toBeUndefined()
+  expect(isActiveEntry(docmagic, docmagic.board!)).toBe(true)
+})
+
 test('credit ships visible, reading its board through its own status column', () => {
   const credit = entryFor('credit')
   expect(credit.analyzer).toBe(true)
