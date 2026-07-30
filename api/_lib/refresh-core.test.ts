@@ -15,23 +15,26 @@ afterEach(() => vi.clearAllMocks())
 test('fetches every board-backed board with its status column, assembles, writes, returns a summary', async () => {
   vi.mocked(fetchBoardStories).mockResolvedValue([{ id: 'x', name: 'X', status: 'Done', module: null }])
   const result = await runRefresh()
-  // Nine active modules; lexi and broker both read the shared Broker LOS board.
-  expect(fetchBoardStories).toHaveBeenCalledTimes(9)
+  // Ten active modules; lexi and broker both read the shared Broker LOS board.
+  expect(fetchBoardStories).toHaveBeenCalledTimes(10)
   const calls = vi.mocked(fetchBoardStories).mock.calls.map((c) => c[0])
   const boardIds = calls.map((c) => c.boardId)
   expect(boardIds).toEqual(
     expect.arrayContaining([
       18420951236, 18420951193, 18420631446, 18420951194, 18420951197, 18420951201, 18420951200,
-      18423914149,
+      18423914149, 18424174374,
     ]),
   )
   // The Broker LOS board is fetched twice: once for broker, once for lexi.
   expect(boardIds.filter((id) => id === 18420631446)).toHaveLength(2)
-  // The Broker LOS board keeps its status in `status`; every other board uses `task_status`.
+  // Each board is read through the status column it actually keeps.
   const statusColumnByBoard = new Map(calls.map((c) => [c.boardId, c.statusColumnId]))
-  expect(statusColumnByBoard.get(18420631446)).toBe('status')
+  const declared = new Map<number, string>([
+    [18420631446, 'status'],
+    [18424174374, 'color_mm5qegn'],
+  ])
   for (const [boardId, col] of statusColumnByBoard) {
-    if (boardId !== 18420631446) expect(col).toBe('task_status')
+    expect(col).toBe(declared.get(boardId) ?? 'task_status')
   }
   expect(writeLatest).toHaveBeenCalledTimes(1)
   expect(result.modules).toBeGreaterThan(0)

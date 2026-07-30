@@ -57,6 +57,18 @@ test('appraisal ships visible, reading its own board', () => {
   expect(ANALYZER_KEYS).toContain('appraisal')
 })
 
+test('credit ships visible, reading its board through its own status column', () => {
+  const credit = entryFor('credit')
+  expect(credit.analyzer).toBe(true)
+  expect(credit.board).toBe(18424174374)
+  expect(moduleStatusColumn(credit)).toBe('color_mm5qegn')
+  expect(credit.hidden).toBeUndefined()
+  expect(isActiveEntry(credit, credit.board!)).toBe(true)
+  expect(credit.sub).toBe('Direct credit data retrieval from bureau providers.')
+  expect(credit.brief).toEqual({ goNoGo: 'Aug 3', goLive: 'Aug 8' })
+  expect(ANALYZER_KEYS).toContain('credit')
+})
+
 test('appraisal carries its own sub and milestone dates', () => {
   const appraisal = entryFor('appraisal')
   expect(appraisal.sub).toBe(
