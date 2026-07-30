@@ -40,7 +40,7 @@ test('POST /api/refresh is mounted and answers JSON', async () => {
   delete process.env.MONDAY_API_TOKEN
   const res = await fetch(`${base}/api/refresh`, { method: 'POST' })
   expect(res.status).toBe(500)
-  expect((await res.json()) as { error: string }).toEqual({ error: 'MONDAY_API_TOKEN is not set' })
+  expect((await res.json()) as { error: string }).toEqual({ error: 'unexpected server error' })
   if (orig !== undefined) process.env.MONDAY_API_TOKEN = orig
 })
 
