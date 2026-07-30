@@ -1,6 +1,7 @@
 import express, { type Express } from 'express'
 import { join } from 'node:path'
 import readiness from '../api/readiness.js'
+import refresh from '../api/refresh.js'
 
 // Wires the SPA + API onto one Express app. staticDir is injected so production
 // and tests can point it at different locations.
@@ -14,6 +15,7 @@ export function createApp(staticDir: string): Express {
   })
 
   app.get('/api/readiness', readiness)
+  app.post('/api/refresh', refresh)
 
   app.use(express.static(staticDir))
 

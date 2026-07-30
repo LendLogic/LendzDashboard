@@ -16,6 +16,17 @@
   .masthead .asof { font-size: 12px; color: #9DB4D0; text-align: right; }
   .masthead .asof b { color: #6FB6FF; display: block; font-size: 13px; font-weight: 600; }
 
+  /* Manual refresh */
+  .refresh { display: flex; align-items: center; justify-content: flex-end; gap: 10px; margin-top: 8px; }
+  .refresh-note { font-size: 11px; color: #FFC48A; max-width: 260px; text-align: right; }
+  .refresh-btn {
+    font-size: 12px; font-weight: 600; color: #DCE9F8; background: rgba(255, 255, 255, .08);
+    border: 1px solid #2C4A6E; border-radius: 8px; padding: 6px 12px; cursor: pointer;
+    transition: all .15s; white-space: nowrap;
+  }
+  .refresh-btn:hover:not(:disabled) { background: rgba(255, 255, 255, .16); border-color: #6FB6FF; }
+  .refresh-btn:disabled { opacity: .55; cursor: default; }
+
   /* Tabs */
   .tabs { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 18px; }
   .tab {
