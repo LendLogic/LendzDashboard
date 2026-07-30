@@ -92,6 +92,7 @@ test('assembleLivePayload emits only board-backed modules in order, source live'
     'uw',
     'lexi',
     'broker',
+    'docmagic',
     'bank',
     'id',
     'pl',

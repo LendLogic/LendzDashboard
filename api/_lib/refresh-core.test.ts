@@ -15,14 +15,14 @@ afterEach(() => vi.clearAllMocks())
 test('fetches every board-backed board with its status column, assembles, writes, returns a summary', async () => {
   vi.mocked(fetchBoardStories).mockResolvedValue([{ id: 'x', name: 'X', status: 'Done', module: null }])
   const result = await runRefresh()
-  // Ten active modules; lexi and broker both read the shared Broker LOS board.
-  expect(fetchBoardStories).toHaveBeenCalledTimes(10)
+  // Eleven active modules; lexi and broker both read the shared Broker LOS board.
+  expect(fetchBoardStories).toHaveBeenCalledTimes(11)
   const calls = vi.mocked(fetchBoardStories).mock.calls.map((c) => c[0])
   const boardIds = calls.map((c) => c.boardId)
   expect(boardIds).toEqual(
     expect.arrayContaining([
       18420951236, 18420951193, 18420631446, 18420951194, 18420951197, 18420951201, 18420951200,
-      18423914149, 18424174374,
+      18423914149, 18424174374, 18424466007,
     ]),
   )
   // The Broker LOS board is fetched twice: once for broker, once for lexi.
@@ -32,6 +32,7 @@ test('fetches every board-backed board with its status column, assembles, writes
   const declared = new Map<number, string>([
     [18420631446, 'status'],
     [18424174374, 'color_mm5qegn'],
+    [18424466007, 'color_mm5rstxa'],
   ])
   for (const [boardId, col] of statusColumnByBoard) {
     expect(col).toBe(declared.get(boardId) ?? 'task_status')

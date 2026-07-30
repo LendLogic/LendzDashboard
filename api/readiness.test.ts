@@ -50,6 +50,7 @@ test('baseline fallback contains only board-backed modules (boardless ones hidde
     'uw',
     'lexi',
     'broker',
+    'docmagic',
     'bank',
     'id',
     'pl',
