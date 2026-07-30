@@ -447,7 +447,7 @@ exports[`baseline modules payload is unchanged 1`] = `
   {
     "key": "appraisal",
     "name": "Appraisal Analyzer",
-    "sub": "Document-extraction analyzer. Build progress from the Analyzers workstream.",
+    "sub": "Property valuation and collateral data extraction from appraisal reports.",
     "phase": "delivery",
     "percent": 0,
     "status": "early",
@@ -457,6 +457,10 @@ exports[`baseline modules payload is unchanged 1`] = `
     "dateConfidence": "projected",
     "assumed": true,
     "assumedLabel": "Awaiting board data",
+    "brief": {
+      "goNoGo": "Aug 3",
+      "goLive": "Aug 8"
+    },
     "counts": {
       "delivered": 0,
       "inProgress": 0,
