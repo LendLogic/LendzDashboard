@@ -7,7 +7,7 @@ Internal, read-only executive dashboard showing delivery readiness across LendLo
 - **Frontend:** Vite + React + TypeScript (SPA)
 - **Backend:** Node/Express server in a Docker container on Azure Container Apps — serves the SPA and `GET /api/readiness`
 - **Storage:** Azure Blob Storage, accessed via Managed Identity (DefaultAzureCredential)
-- **Data refresh:** scheduled Azure Container Apps Job (cron `*/15 * * * *`) that rebuilds the readiness payload
+- **Data refresh:** scheduled Azure Container Apps Job (cron `0 0 * * *`, daily at 00:00 UTC) that rebuilds the readiness payload
 - **Data sources (phase 2):** Monday.com API (story status) + metrics DB (Bank Statement Analyzer KPIs)
 
 ## Docs
