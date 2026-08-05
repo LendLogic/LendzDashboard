@@ -40,7 +40,7 @@ The script, in order: creates the resource group, ACR, storage account + the
 assignments, seeds the initial image (`az acr build`), the Container Apps
 environment, the web container app (external ingress on port 3000,
 `--min-replicas 1 --max-replicas 3`), and the scheduled refresh job
-(`--cron-expression "*/15 * * * *"`). It prints the web app FQDN at the end.
+(`--cron-expression "0 0 * * *"`). It prints the web app FQDN at the end.
 
 ## 2. Set up GitHub OIDC federated credentials
 
@@ -132,7 +132,7 @@ az containerapp job secret set \
 
 ## 5. Trigger the refresh job manually ("Run now")
 
-The scheduled job runs every 15 minutes. To force an immediate run:
+The scheduled job runs daily at 00:00 UTC. To force an immediate run:
 
 ```bash
 az containerapp job start \

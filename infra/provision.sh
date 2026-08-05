@@ -147,7 +147,7 @@ az containerapp create \
   --secrets "monday-api-token=$MONDAY_API_TOKEN" \
   --env-vars "${COMMON_ENV[@]}"
 
-echo "==> [9/9] Creating scheduled refresh job '$JOB_NAME' (cron */15 * * * *)"
+echo "==> [9/9] Creating scheduled refresh job '$JOB_NAME' (cron 0 0 * * *)"
 # Same image and identity as the web app; the CMD is overridden to run the
 # one-shot refresh entrypoint instead of the web server.
 az containerapp job create \
@@ -156,7 +156,7 @@ az containerapp job create \
   --environment "$ENVIRONMENT" \
   --image "$ACR_LOGIN_SERVER/$IMAGE" \
   --trigger-type Schedule \
-  --cron-expression "*/15 * * * *" \
+  --cron-expression "0 0 * * *" \
   --replica-timeout 600 \
   --replica-retry-limit 1 \
   --user-assigned "$IDENTITY_RESOURCE_ID" \

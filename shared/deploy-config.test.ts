@@ -18,7 +18,7 @@ test('.dockerignore keeps node_modules and test files out of the image', () => {
 
 test('the refresh job cron schedule is declared in the provisioning script', () => {
   const provision = readFileSync(join(root, 'infra/provision.sh'), 'utf8')
-  expect(provision).toContain('*/15 * * * *')
+  expect(provision).toContain('0 0 * * *')
 })
 
 test('a CI workflow exists to deploy to Azure Container Apps', () => {
