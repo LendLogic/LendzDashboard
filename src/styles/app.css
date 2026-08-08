@@ -198,7 +198,7 @@
   @keyframes fade { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
   @media (prefers-reduced-motion: reduce) {
     .panel.active { animation: none; }
-    .fill { transition: none; }
+    .fill { animation: none; transition: none; }
   }
 
   /* Module header band */
@@ -233,7 +233,12 @@
   .pill.grey  { background: var(--wash-neutral); color: var(--wash-neutral-ink); }
   .pill.red   { background: var(--wash-critical); color: var(--wash-critical-ink); }
   .track { margin-top: 16px; height: 9px; border-radius: var(--r-pill); background: var(--measure-track); overflow: hidden; }
-  .fill { height: 100%; border-radius: 0 var(--r-pill) var(--r-pill) 0; background: var(--measure); width: 0; transition: width 1s cubic-bezier(.2,.7,.3,1); }
+  .fill {
+    height: 100%; border-radius: 0 var(--r-pill) var(--r-pill) 0; background: var(--measure);
+    transform-origin: left center; animation: fill-in .9s cubic-bezier(.2,.7,.3,1) both;
+    transition: width .6s cubic-bezier(.2,.7,.3,1);
+  }
+  @keyframes fill-in { from { transform: scaleX(0); } to { transform: scaleX(1); } }
   .note { font-size: var(--fs-sm); color: var(--ink-muted); margin-top: 12px; line-height: 1.55; }
 
   /* Buckets */
