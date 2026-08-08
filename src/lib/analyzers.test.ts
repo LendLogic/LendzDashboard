@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest'
-import { groupByFamily, partitionModules, globalAnalyzerPercent } from './analyzers'
+import { groupByFamily, partitionModules, globalAnalyzerPercent, shortLabel } from './analyzers'
 import type { Module } from '../../shared/readiness'
 
 const mk = (key: string, d: number, ip: number, r: number): Module => ({
@@ -47,6 +47,17 @@ test('globalAnalyzerPercent is 0 when every analyzer is assumed', () => {
   const a = { ...mk('bank', 1, 1, 1), assumed: true } as Module
   const b = { ...mk('id', 2, 0, 0), assumed: true } as Module
   expect(globalAnalyzerPercent([a, b])).toBe(0)
+})
+
+// The index sits under an "Analyzers" heading, so repeating the word on all
+// sixteen rows is what pushed the column past 260px in the first place.
+test('shortLabel drops a trailing Analyzer, and leaves every other name alone', () => {
+  expect(shortLabel('Bank Statement Analyzer')).toBe('Bank Statement')
+  expect(shortLabel('ID Analyzer')).toBe('ID')
+  expect(shortLabel('Tax Docs Analyzer')).toBe('Tax Docs')
+  expect(shortLabel('Pricing & Eligibility')).toBe('Pricing & Eligibility')
+  expect(shortLabel('Analyzer')).toBe('Analyzer')
+  expect(shortLabel('Analyzer Framework')).toBe('Analyzer Framework')
 })
 
 test('groupByFamily returns sections in family order, each in registry order', () => {

@@ -3,6 +3,14 @@ import { ANALYZER_KEYS, creditedPercent } from '../../shared/readiness'
 import type { AnalyzerFamily } from '../../shared/registry'
 import { ANALYZER_FAMILIES, FAMILY_LABEL, analyzerFamily } from '../../shared/registry'
 
+// Every analyzer is named "<something> Analyzer", and the index already sits
+// under an Analyzers heading. Repeating the word on all sixteen rows is what
+// made the column wide enough to crowd the detail panel.
+export function shortLabel(name: string): string {
+  const trimmed = name.replace(/\s+Analyzer$/, '')
+  return trimmed === '' ? name : trimmed
+}
+
 export interface FamilySection {
   family: AnalyzerFamily
   label: string

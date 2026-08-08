@@ -77,49 +77,120 @@
     --r-md: 10px;
     --r-lg: 14px;
     --r-pill: 999px;
+
+    /* Shell metrics */
+    --rail-w: 78px;
+    /* Fits the longest module name at 12.5px once the row's bar, gutter and
+       number are subtracted; "DocMagic Integration" was clipping at 208px. */
+    --index-w: 224px;
+    --page-max: 1440px;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
     font-family: var(--font-sans);
-    background: var(--plane); color: var(--ink); line-height: 1.5; padding: 28px 24px;
+    background: var(--plane); color: var(--ink); line-height: 1.5;
     -webkit-font-smoothing: antialiased;
   }
-  .wrap { max-width: 1040px; margin: 0 auto; }
+  /* Loading, error and empty states render before the shell exists. */
+  .wrap { max-width: 1040px; margin: 0 auto; padding: 28px 24px; }
 
-  /* Masthead */
-  .masthead {
-    background: var(--navy); border-radius: var(--r-lg); padding: 22px 30px; margin-bottom: 18px;
-    display: flex; align-items: center; justify-content: space-between;
+  /* Shell: navy rail, white index, then the canvas the detail sits on */
+  .shell {
+    display: grid; grid-template-columns: var(--rail-w) var(--index-w) minmax(0, 1fr);
+    max-width: var(--page-max); margin: 0 auto; min-height: 100vh;
   }
-  .masthead .brand { font-size: 20px; font-weight: 600; color: var(--card); letter-spacing: var(--track-tight); }
-  .masthead .brand span { display: block; font-size: var(--fs-md); font-weight: 400; color: var(--on-navy-muted); margin-top: 3px; letter-spacing: 0; }
-  .masthead .asof { font-size: var(--fs-xs); color: var(--on-navy-muted); text-align: right; }
-  .masthead .asof b { color: var(--on-navy-accent); display: block; font-size: var(--fs-md); font-weight: 600; }
+
+  .rail {
+    background: var(--navy); padding: 16px 0; display: flex; flex-direction: column;
+    align-items: center; gap: 4px;
+  }
+  .rail-mark {
+    width: 32px; height: 32px; border-radius: var(--r-sm); background: var(--measure);
+    color: var(--card); font-size: var(--fs-xs); font-weight: 700; letter-spacing: .02em;
+    display: flex; align-items: center; justify-content: center; margin-bottom: 14px;
+  }
+  .rail-item {
+    font-family: inherit; width: 64px; padding: 9px 0 7px; border: 0; border-radius: var(--r-sm);
+    background: none; color: var(--on-navy-muted); cursor: pointer; display: flex;
+    flex-direction: column; align-items: center; gap: 3px; transition: background .15s, color .15s;
+  }
+  .rail-item:hover { color: var(--card); background: var(--overlay-soft); }
+  .rail-item.active { background: var(--overlay-strong); color: var(--card); }
+  .rail-label {
+    font-size: var(--fs-micro); font-weight: 600; letter-spacing: var(--track-mid);
+    text-transform: uppercase;
+  }
+
+  .index { background: var(--card); border-right: 1px solid var(--rule); padding: 16px 0; }
+  .index-heading {
+    display: flex; justify-content: space-between; align-items: baseline; gap: 8px;
+    padding: 0 14px 12px; margin-bottom: 4px; border-bottom: 1px solid var(--rule-soft);
+    font-size: var(--fs-micro); font-weight: 700; text-transform: uppercase;
+    letter-spacing: var(--track-wide); color: var(--ink-muted);
+  }
+  .index-heading b { font-size: var(--fs-2xs); color: var(--ink); letter-spacing: 0; }
+  .index-list { display: flex; flex-direction: column; }
+  .index-group {
+    display: flex; justify-content: space-between; padding: 14px 14px 5px;
+    font-size: var(--fs-micro); font-weight: 700; text-transform: uppercase;
+    letter-spacing: var(--track-wide); color: var(--ink-muted);
+  }
+  .index-row {
+    font-family: inherit; display: flex; align-items: center; gap: 8px; width: 100%;
+    padding: 6px 14px; border: 0; background: none; cursor: pointer; text-align: left;
+    font-size: var(--fs-sm); font-weight: 500; color: var(--ink-2);
+    border-left: 2px solid transparent; transition: background .12s, color .12s;
+  }
+  .index-row:hover { background: var(--rule-soft); color: var(--ink); }
+  .index-row.active {
+    background: var(--wash-measure); color: var(--ink); font-weight: 600;
+    border-left-color: var(--measure);
+  }
+  .index-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .index-bar {
+    flex: 0 0 30px; width: 30px; height: 3px; border-radius: 2px;
+    background: var(--measure-track); overflow: hidden;
+  }
+  .index-bar i { display: block; height: 100%; background: var(--measure); border-radius: 0 2px 2px 0; }
+  .index-pct {
+    flex: 0 0 20px; width: 20px; text-align: right; font-size: var(--fs-2xs); font-weight: 700;
+    color: var(--ink-muted); font-variant-numeric: tabular-nums;
+  }
+  .index-row.active .index-pct { color: var(--measure); }
+
+  .canvas { padding: 22px 26px 40px; min-width: 0; }
+
+  @media (max-width: 900px) {
+    .shell { grid-template-columns: var(--rail-w) minmax(0, 1fr); }
+    .index { grid-column: 1 / -1; grid-row: 2; border-right: 0; border-bottom: 1px solid var(--rule); }
+    .rail { flex-direction: row; justify-content: flex-start; gap: 4px; padding: 10px 12px; }
+    .rail-mark { margin-bottom: 0; margin-right: 8px; }
+    .canvas { grid-column: 1 / -1; grid-row: 3; padding: 18px 16px 32px; }
+  }
+
+  /* Masthead: a slim ledger header, since the rail already carries the navy */
+  .masthead {
+    display: flex; align-items: flex-start; justify-content: space-between; gap: 24px;
+    padding-bottom: 16px; margin-bottom: 20px; border-bottom: 1px solid var(--rule);
+  }
+  .masthead .brand { font-size: var(--fs-xl); font-weight: 600; color: var(--ink); letter-spacing: var(--track-tight); }
+  .masthead .brand span { display: block; font-size: var(--fs-xs); font-weight: 500; color: var(--ink-muted); margin-top: 2px; letter-spacing: var(--track-mid); text-transform: uppercase; }
+  .masthead .asof { font-size: var(--fs-micro); color: var(--ink-muted); text-align: right; text-transform: uppercase; letter-spacing: var(--track-wide); font-weight: 700; }
+  .masthead .asof b { color: var(--ink); display: block; font-size: var(--fs-xs); font-weight: 600; text-transform: none; letter-spacing: 0; font-variant-numeric: tabular-nums; }
 
   /* Manual refresh */
   .refresh { display: flex; align-items: center; justify-content: flex-end; gap: 10px; margin-top: 8px; }
-  .refresh-note { font-size: var(--fs-2xs); color: var(--on-navy-warning); max-width: 260px; text-align: right; }
+  .refresh-note { font-size: var(--fs-2xs); color: var(--wash-warning-ink); max-width: 260px; text-align: right; text-transform: none; letter-spacing: 0; font-weight: 400; }
   .refresh-btn {
     font-family: inherit;
-    font-size: var(--fs-xs); font-weight: 600; color: var(--on-navy); background: var(--overlay-soft);
-    border: 1px solid var(--navy-border); border-radius: var(--r-sm); padding: 6px 12px; cursor: pointer;
+    font-size: var(--fs-xs); font-weight: 600; color: var(--ink-2); background: var(--card);
+    border: 1px solid var(--rule); border-radius: var(--r-sm); padding: 6px 12px; cursor: pointer;
     transition: background .15s, border-color .15s; white-space: nowrap;
+    text-transform: none; letter-spacing: 0;
   }
-  .refresh-btn:hover:not(:disabled) { background: var(--overlay-strong); border-color: var(--on-navy-accent); }
+  .refresh-btn:hover:not(:disabled) { background: var(--rule-soft); border-color: var(--rule-strong); }
   .refresh-btn:disabled { opacity: .55; cursor: default; }
-
-  /* Tabs */
-  .tabs { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 18px; }
-  .tab {
-    font-family: inherit;
-    font-size: var(--fs-md); font-weight: 500; color: var(--ink-2); background: var(--card);
-    border: 1px solid var(--rule); border-radius: var(--r-md); padding: 9px 15px; cursor: pointer;
-    transition: border-color .15s, background .15s, color .15s; white-space: nowrap;
-  }
-  .tab:hover { border-color: var(--rule-strong); }
-  .tab.active { background: var(--measure); color: var(--card); border-color: var(--measure); }
-  .tab .mini { display: inline-block; margin-left: 7px; font-size: var(--fs-2xs); font-weight: 700; opacity: .85; }
 
   /* Panels */
   .panel { display: none; }
@@ -263,9 +334,10 @@
   .analyzer-card:hover { border-color: var(--rule-strong); }
   .analyzer-card .ac-name { font-size: var(--fs-md); font-weight: 600; color: var(--ink); margin-bottom: 8px; }
   .analyzer-card .ac-pct { font-size: var(--fs-2xl); font-weight: 600; color: var(--ink); margin-right: 8px; letter-spacing: var(--track-tight); }
-  .subnav { margin-top: -8px; }
 
   /* Keyboard focus, one visible treatment for every interactive element */
-  .tab:focus-visible, .refresh-btn:focus-visible, .analyzer-card:focus-visible, .detail summary:focus-visible {
+  .rail-item:focus-visible, .index-row:focus-visible, .refresh-btn:focus-visible,
+  .analyzer-card:focus-visible, .detail summary:focus-visible {
     outline: 2px solid var(--measure); outline-offset: 2px;
   }
+  .rail-item:focus-visible { outline-color: var(--on-navy-accent); }

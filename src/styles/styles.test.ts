@@ -8,9 +8,17 @@ const css = readFileSync(join(__dirname, './app.css'), 'utf8')
 
 const TOKEN_BLOCK = /:root\s*\{([\s\S]*?)\n\s*\}/
 
-test('app.css contains the core PoC classes', () => {
-  for (const cls of ['.masthead', '.tabs', '.panel', '.modband', '.bucket', '.bignum', '.fill']) {
+test('app.css contains the core layout and panel classes', () => {
+  for (const cls of ['.shell', '.rail', '.index', '.canvas', '.masthead', '.panel', '.modband', '.bucket', '.bignum', '.fill']) {
     expect(css).toContain(cls)
+  }
+})
+
+// The pill tabs are gone with the component. Orphaned rules for a retired
+// component are the CSS equivalent of dead code.
+test('no rules survive for the retired tab navigation', () => {
+  for (const cls of ['.tabs', '.tab ', '.tab.', '.tab:', '.subnav']) {
+    expect(css).not.toContain(cls)
   }
 })
 
