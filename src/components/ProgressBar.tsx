@@ -1,11 +1,7 @@
-import { useEffect, useState } from 'react'
-
+// The width is the value, set on the first render. The grow-in is a CSS
+// animation rather than a JS-driven width change, so the rendered bar never
+// contradicts aria-valuenow — not in a background tab, in print, or in a capture.
 export function ProgressBar({ percent }: { percent: number }) {
-  const [width, setWidth] = useState(0)
-  useEffect(() => {
-    const id = requestAnimationFrame(() => setWidth(percent))
-    return () => cancelAnimationFrame(id)
-  }, [percent])
   return (
     <div className="track">
       <div
@@ -14,7 +10,7 @@ export function ProgressBar({ percent }: { percent: number }) {
         aria-valuenow={percent}
         aria-valuemin={0}
         aria-valuemax={100}
-        style={{ width: `${width}%` }}
+        style={{ width: `${percent}%` }}
       />
     </div>
   )
