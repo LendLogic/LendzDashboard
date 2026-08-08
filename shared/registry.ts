@@ -432,6 +432,14 @@ export function toBaselineModule(entry: ModuleEntry): DeliveryModule {
     buckets: { delivered: [], inProgress: [], remaining: [] },
     ...entry.baseline,
   }
-  if (!module.assumed) delete module.assumedLabel
+  if (!module.assumed) {
+    delete module.assumedLabel
+    return module
+  }
+  // The generic default has to agree with whether a figure is actually there:
+  // "Awaiting board data" beside a 77% bar contradicts itself.
+  if (!entry.baseline?.assumedLabel && module.percent > 0) {
+    module.assumedLabel = 'Figures asserted'
+  }
   return module
 }

@@ -1,11 +1,14 @@
 import type { DeliveryModule } from '../../shared/readiness'
 import { ProgressBar } from './ProgressBar'
+import { PercentReadout } from './PercentReadout'
 import { BucketColumn } from './BucketColumn'
 import { AssumedBadge } from './AssumedBadge'
 import { STATUS_PILL } from '../lib/statusPill'
+import { provenanceOf } from '../lib/provenance'
 
 export function DeliveryPanel({ module: m }: { module: DeliveryModule }) {
   const brief = m.brief
+  const provenance = provenanceOf(m)
   const hasDates = brief && (brief.goNoGo || brief.goLive)
   return (
     <div className="panel active" role="tabpanel">
@@ -50,10 +53,12 @@ export function DeliveryPanel({ module: m }: { module: DeliveryModule }) {
         <div className="card">
           <div className="label">Delivery progress</div>
           <div>
-            <span className="bignum">{m.percent}<span className="unit">%</span></span>
+            <PercentReadout percent={m.percent} provenance={provenance} />
             <span className={`pill ${STATUS_PILL[m.status]}`}>{m.statusLabel}</span>
           </div>
-          <ProgressBar percent={m.percent} />
+          {provenance === 'unmeasured' ? null : (
+            <ProgressBar percent={m.percent} provenance={provenance} />
+          )}
           <div className="note">{m.note}</div>
         </div>
         <div className="card">

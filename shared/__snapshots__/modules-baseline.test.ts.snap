@@ -342,7 +342,7 @@ exports[`baseline modules payload is unchanged 1`] = `
     "targetDate": "~6 July",
     "dateConfidence": "projected",
     "assumed": true,
-    "assumedLabel": "Awaiting board data",
+    "assumedLabel": "Figures asserted",
     "brief": {
       "goNoGo": "Jul 27",
       "goLive": "Aug 1"
