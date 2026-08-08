@@ -167,14 +167,6 @@
 
   .canvas { padding: 22px 26px 40px; min-width: 0; }
 
-  @media (max-width: 900px) {
-    .shell { grid-template-columns: var(--rail-w) minmax(0, 1fr); }
-    .index { grid-column: 1 / -1; grid-row: 2; border-right: 0; border-bottom: 1px solid var(--rule); }
-    .rail { flex-direction: row; justify-content: flex-start; gap: 4px; padding: 10px 12px; }
-    .rail-mark { margin-bottom: 0; margin-right: 8px; }
-    .canvas { grid-column: 1 / -1; grid-row: 3; padding: 18px 16px 32px; }
-  }
-
   /* Masthead: a slim ledger header, since the rail already carries the navy */
   .masthead {
     display: flex; align-items: flex-start; justify-content: space-between; gap: 24px;
@@ -322,11 +314,6 @@
   .cardetail li::before { content: "–"; position: absolute; left: 0; color: var(--ink-faint); }
   .cardetail li:last-child { margin-bottom: 0; }
   .cardetail li b { color: var(--ink); font-weight: 600; }
-  @media (max-width: 640px) {
-    .cardetail .detailbody { grid-template-columns: 1fr; gap: 18px; }
-    .modband { flex-direction: column; }
-    .modband .release, .modband .datestrip { text-align: left; }
-  }
 
   /* Detail table */
   .detail { margin-top: 14px; }
@@ -371,3 +358,41 @@
     outline: 2px solid var(--measure); outline-offset: 2px;
   }
   .rail-item:focus-visible { outline-color: var(--on-navy-accent); }
+
+  /* Responsive overrides live last: a media query placed above a base rule
+     of equal specificity loses to it, which is how the three-column card rows
+     kept overflowing a phone. */
+  /* Below the two-column threshold the three zones stack in document order, so
+     the shell stops reserving a rail column and the rail turns into a bar. */
+  @media (max-width: 900px) {
+    .shell { grid-template-columns: minmax(0, 1fr); }
+    .rail {
+      flex-direction: row; justify-content: flex-start; align-items: center;
+      gap: 4px; padding: 10px 12px; flex-wrap: wrap;
+    }
+    .rail-mark { margin-bottom: 0; margin-right: 8px; }
+    /* A fixed 64px item fits the stacked icon, not a label beside it: DELIVERY
+       and ANALYZERS collided and overflowed their buttons. */
+    .rail-item { width: auto; flex-direction: row; gap: 7px; padding: 7px 11px; }
+    .index { border-right: 0; border-bottom: 1px solid var(--rule); }
+    .canvas { padding: 18px 16px 32px; }
+    .masthead { flex-wrap: wrap; gap: 12px; }
+    .masthead .asof { text-align: left; }
+    .refresh { justify-content: flex-start; }
+    .refresh-note { text-align: left; }
+  }
+
+  /* A grid column will not shrink below its content, and a 44px figure beside a
+     status pill is wider than a third of a phone, so these stack instead. */
+  @media (max-width: 720px) {
+    .row3, .buckets { grid-template-columns: minmax(0, 1fr); }
+    .bignum { font-size: var(--fs-2xl); }
+    .modband .datestrip { gap: 18px; }
+    table { font-size: var(--fs-xs); }
+  }
+
+  @media (max-width: 640px) {
+    .cardetail .detailbody { grid-template-columns: 1fr; gap: 18px; }
+    .modband { flex-direction: column; }
+    .modband .release, .modband .datestrip { text-align: left; }
+  }
