@@ -1,16 +1,12 @@
 import type { Provenance } from '../lib/provenance'
+import { NotMeasured } from './NotMeasured'
 
 export function PercentReadout({ percent, provenance }: {
   percent: number
   provenance: Provenance
 }) {
   if (provenance === 'unmeasured') {
-    return (
-      <span className="bignum none">
-        <span aria-hidden="true">—</span>
-        <span className="sr-only">Not measured</span>
-      </span>
-    )
+    return <span className="bignum none"><NotMeasured /></span>
   }
   return (
     <span className={`bignum${provenance === 'asserted' ? ' asserted' : ''}`}>

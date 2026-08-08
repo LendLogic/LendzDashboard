@@ -1,7 +1,7 @@
 import type { Module } from '../../shared/readiness'
 import { ProgressBar } from './ProgressBar'
 import { PercentReadout } from './PercentReadout'
-import { globalAnalyzerPercent, shortLabel } from '../lib/analyzers'
+import { analyzerAggregate, shortLabel } from '../lib/analyzers'
 import { provenanceOf } from '../lib/provenance'
 import { STATUS_PILL } from '../lib/statusPill'
 
@@ -9,14 +9,14 @@ export function AnalyzersOverview({ analyzers, onSelect }: {
   analyzers: Module[]
   onSelect: (key: string) => void
 }) {
-  const pct = globalAnalyzerPercent(analyzers)
+  const agg = analyzerAggregate(analyzers)
   const measured = analyzers.filter((m) => !m.assumed).length
   return (
     <div className="panel active" role="tabpanel">
       <div className="card">
         <div className="label">Analyzer readiness</div>
-        <div><span className="bignum">{pct}<span className="unit">%</span></span></div>
-        <ProgressBar percent={pct} />
+        <div><PercentReadout percent={agg.percent} provenance={agg.provenance} /></div>
+        {agg.provenance === 'unmeasured' ? null : <ProgressBar percent={agg.percent} />}
         <div className="note">
           Combined across {analyzers.length} analyzers.{' '}
           <b>{measured} of {analyzers.length} measured</b> from a board; the rest carry
