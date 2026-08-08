@@ -378,6 +378,82 @@ export const MODULE_REGISTRY = [
       },
     },
   }),
+
+  // The rest of the "Analyzers:" boards in the Underwriting folder (Monday folder
+  // 20849229). Every one reads its status from the default task_status column, so
+  // none declares one. Subs restate the analyzer's own name rather than assert
+  // scope none of these boards has published yet.
+  defineModule({
+    key: 'tax1040',
+    name: 'Tax Return Analyzer',
+    analyzer: true,
+    family: 'financials',
+    sub: 'Personal tax return extraction, Form 1040.',
+    board: 18425100702,
+  }),
+
+  defineModule({
+    key: 'taxbiz',
+    name: 'Business Tax Return Analyzer',
+    analyzer: true,
+    family: 'financials',
+    sub: 'Business tax return extraction.',
+    board: 18425100840,
+  }),
+
+  defineModule({
+    key: 'k1',
+    name: 'K-1 Analyzer',
+    analyzer: true,
+    family: 'financials',
+    sub: 'Schedule K-1 extraction.',
+    board: 18425100779,
+  }),
+
+  defineModule({
+    key: 'form1099',
+    name: '1099 Analyzer',
+    analyzer: true,
+    family: 'financials',
+    sub: '1099 form extraction.',
+    board: 18425100610,
+  }),
+
+  defineModule({
+    key: 'w2',
+    name: 'W-2 Analyzer',
+    analyzer: true,
+    family: 'financials',
+    sub: 'W-2 form extraction.',
+    board: 18425100540,
+  }),
+
+  defineModule({
+    key: 'voe',
+    name: 'VOE Analyzer',
+    analyzer: true,
+    family: 'financials',
+    sub: 'Verification of employment.',
+    board: 18425101091,
+  }),
+
+  defineModule({
+    key: 'title',
+    name: 'Title Analyzer',
+    analyzer: true,
+    family: 'property',
+    sub: 'Title document extraction.',
+    board: 18425100915,
+  }),
+
+  defineModule({
+    key: 'insurance',
+    name: 'Insurance Analyzer',
+    analyzer: true,
+    family: 'property',
+    sub: 'Insurance policy extraction.',
+    board: 18425101014,
+  }),
 ]
 
 export type ModuleKey = (typeof MODULE_REGISTRY)[number]['key']

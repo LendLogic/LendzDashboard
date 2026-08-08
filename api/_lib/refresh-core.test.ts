@@ -15,8 +15,8 @@ afterEach(() => vi.clearAllMocks())
 test('fetches every board-backed board with its status column, assembles, writes, returns a summary', async () => {
   vi.mocked(fetchBoardStories).mockResolvedValue([{ id: 'x', name: 'X', status: 'Done', module: null }])
   const result = await runRefresh()
-  // Eleven active modules; lexi and broker both read the shared Broker LOS board.
-  expect(fetchBoardStories).toHaveBeenCalledTimes(11)
+  // Nineteen active modules; lexi and broker both read the shared Broker LOS board.
+  expect(fetchBoardStories).toHaveBeenCalledTimes(19)
   const calls = vi.mocked(fetchBoardStories).mock.calls.map((c) => c[0])
   const boardIds = calls.map((c) => c.boardId)
   expect(boardIds).toEqual(
@@ -122,7 +122,7 @@ test('every board failing logs every reason, not just the summary', async () => 
 
   await expect(runRefresh()).rejects.toThrow(/all Monday board fetches failed/)
 
-  expect(errs).toHaveLength(11)
+  expect(errs).toHaveLength(19)
   expect(errs.every((e) => e.includes('Monday API HTTP 401'))).toBe(true)
   spy.mockRestore()
 })

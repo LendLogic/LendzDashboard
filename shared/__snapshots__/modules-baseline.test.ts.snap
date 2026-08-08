@@ -563,6 +563,198 @@ exports[`baseline modules payload is unchanged 1`] = `
         }
       ]
     }
+  },
+  {
+    "key": "tax1040",
+    "name": "Tax Return Analyzer",
+    "sub": "Personal tax return extraction, Form 1040.",
+    "phase": "delivery",
+    "percent": 0,
+    "status": "early",
+    "statusLabel": "Early build",
+    "note": "Dedicated board just seeded. Figures assumed until stories land.",
+    "targetDate": "Release Two",
+    "dateConfidence": "projected",
+    "assumed": true,
+    "assumedLabel": "Awaiting board data",
+    "counts": {
+      "delivered": 0,
+      "inProgress": 0,
+      "remaining": 0
+    },
+    "buckets": {
+      "delivered": [],
+      "inProgress": [],
+      "remaining": []
+    }
+  },
+  {
+    "key": "taxbiz",
+    "name": "Business Tax Return Analyzer",
+    "sub": "Business tax return extraction.",
+    "phase": "delivery",
+    "percent": 0,
+    "status": "early",
+    "statusLabel": "Early build",
+    "note": "Dedicated board just seeded. Figures assumed until stories land.",
+    "targetDate": "Release Two",
+    "dateConfidence": "projected",
+    "assumed": true,
+    "assumedLabel": "Awaiting board data",
+    "counts": {
+      "delivered": 0,
+      "inProgress": 0,
+      "remaining": 0
+    },
+    "buckets": {
+      "delivered": [],
+      "inProgress": [],
+      "remaining": []
+    }
+  },
+  {
+    "key": "k1",
+    "name": "K-1 Analyzer",
+    "sub": "Schedule K-1 extraction.",
+    "phase": "delivery",
+    "percent": 0,
+    "status": "early",
+    "statusLabel": "Early build",
+    "note": "Dedicated board just seeded. Figures assumed until stories land.",
+    "targetDate": "Release Two",
+    "dateConfidence": "projected",
+    "assumed": true,
+    "assumedLabel": "Awaiting board data",
+    "counts": {
+      "delivered": 0,
+      "inProgress": 0,
+      "remaining": 0
+    },
+    "buckets": {
+      "delivered": [],
+      "inProgress": [],
+      "remaining": []
+    }
+  },
+  {
+    "key": "form1099",
+    "name": "1099 Analyzer",
+    "sub": "1099 form extraction.",
+    "phase": "delivery",
+    "percent": 0,
+    "status": "early",
+    "statusLabel": "Early build",
+    "note": "Dedicated board just seeded. Figures assumed until stories land.",
+    "targetDate": "Release Two",
+    "dateConfidence": "projected",
+    "assumed": true,
+    "assumedLabel": "Awaiting board data",
+    "counts": {
+      "delivered": 0,
+      "inProgress": 0,
+      "remaining": 0
+    },
+    "buckets": {
+      "delivered": [],
+      "inProgress": [],
+      "remaining": []
+    }
+  },
+  {
+    "key": "w2",
+    "name": "W-2 Analyzer",
+    "sub": "W-2 form extraction.",
+    "phase": "delivery",
+    "percent": 0,
+    "status": "early",
+    "statusLabel": "Early build",
+    "note": "Dedicated board just seeded. Figures assumed until stories land.",
+    "targetDate": "Release Two",
+    "dateConfidence": "projected",
+    "assumed": true,
+    "assumedLabel": "Awaiting board data",
+    "counts": {
+      "delivered": 0,
+      "inProgress": 0,
+      "remaining": 0
+    },
+    "buckets": {
+      "delivered": [],
+      "inProgress": [],
+      "remaining": []
+    }
+  },
+  {
+    "key": "voe",
+    "name": "VOE Analyzer",
+    "sub": "Verification of employment.",
+    "phase": "delivery",
+    "percent": 0,
+    "status": "early",
+    "statusLabel": "Early build",
+    "note": "Dedicated board just seeded. Figures assumed until stories land.",
+    "targetDate": "Release Two",
+    "dateConfidence": "projected",
+    "assumed": true,
+    "assumedLabel": "Awaiting board data",
+    "counts": {
+      "delivered": 0,
+      "inProgress": 0,
+      "remaining": 0
+    },
+    "buckets": {
+      "delivered": [],
+      "inProgress": [],
+      "remaining": []
+    }
+  },
+  {
+    "key": "title",
+    "name": "Title Analyzer",
+    "sub": "Title document extraction.",
+    "phase": "delivery",
+    "percent": 0,
+    "status": "early",
+    "statusLabel": "Early build",
+    "note": "Dedicated board just seeded. Figures assumed until stories land.",
+    "targetDate": "Release Two",
+    "dateConfidence": "projected",
+    "assumed": true,
+    "assumedLabel": "Awaiting board data",
+    "counts": {
+      "delivered": 0,
+      "inProgress": 0,
+      "remaining": 0
+    },
+    "buckets": {
+      "delivered": [],
+      "inProgress": [],
+      "remaining": []
+    }
+  },
+  {
+    "key": "insurance",
+    "name": "Insurance Analyzer",
+    "sub": "Insurance policy extraction.",
+    "phase": "delivery",
+    "percent": 0,
+    "status": "early",
+    "statusLabel": "Early build",
+    "note": "Dedicated board just seeded. Figures assumed until stories land.",
+    "targetDate": "Release Two",
+    "dateConfidence": "projected",
+    "assumed": true,
+    "assumedLabel": "Awaiting board data",
+    "counts": {
+      "delivered": 0,
+      "inProgress": 0,
+      "remaining": 0
+    },
+    "buckets": {
+      "delivered": [],
+      "inProgress": [],
+      "remaining": []
+    }
   }
 ]"
 `;

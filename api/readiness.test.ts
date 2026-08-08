@@ -57,6 +57,14 @@ test('baseline fallback contains only board-backed modules (boardless ones hidde
     'paystub',
     'appraisal',
     'credit',
+    'tax1040',
+    'taxbiz',
+    'k1',
+    'form1099',
+    'w2',
+    'voe',
+    'title',
+    'insurance',
   ])
   expect(body.source).toBe('baseline')
   expect(res.headers['Cache-Control']).toContain('public')

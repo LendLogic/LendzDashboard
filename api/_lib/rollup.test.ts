@@ -99,6 +99,14 @@ test('assembleLivePayload emits only board-backed modules in order, source live'
     'paystub',
     'appraisal',
     'credit',
+    'tax1040',
+    'taxbiz',
+    'k1',
+    'form1099',
+    'w2',
+    'voe',
+    'title',
+    'insurance',
   ])
   expect(p.source).toBe('live')
   expect(p.builtAt).toBe('2026-07-08T00:00:00Z')

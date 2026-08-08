@@ -159,6 +159,58 @@ test('the family order is the loan-file reading order and every family has a lab
   expect(FAMILY_LABEL.financials).toBe('Financials')
 })
 
+// Every "Analyzers:" board in Monday folder 20849229 (LendLogic > Underwriting).
+// Read off the folder rather than guessed, so a drift here is a real drift.
+const ANALYZER_BOARDS: ReadonlyArray<readonly [string, number]> = [
+  ['bank', 18420951194],
+  ['id', 18420951197],
+  ['pl', 18420951201],
+  ['paystub', 18420951200],
+  ['appraisal', 18423914149],
+  ['credit', 18424174374],
+  ['tax1040', 18425100702],
+  ['taxbiz', 18425100840],
+  ['k1', 18425100779],
+  ['form1099', 18425100610],
+  ['w2', 18425100540],
+  ['voe', 18425101091],
+  ['title', 18425100915],
+  ['insurance', 18425101014],
+]
+
+test('every Analyzers board in the Underwriting folder has an entry, wired to its own board', () => {
+  for (const [key, board] of ANALYZER_BOARDS) {
+    const entry = entryFor(key)
+    expect(entry.analyzer).toBe(true)
+    expect(entry.board).toBe(board)
+    expect(isActiveEntry(entry, entry.board!)).toBe(true)
+  }
+})
+
+test('no two analyzers point at the same board', () => {
+  const boards = ANALYZER_BOARDS.map(([, b]) => b)
+  expect(new Set(boards).size).toBe(boards.length)
+})
+
+// Broker LOS is the one board deliberately shared, by two delivery modules.
+test('the new analyzer boards all read the default status column', () => {
+  for (const key of ['tax1040', 'taxbiz', 'k1', 'form1099', 'w2', 'voe', 'title', 'insurance']) {
+    expect(moduleStatusColumn(entryFor(key))).toBe('task_status')
+    expect(entryFor(key).statusColumn).toBeUndefined()
+  }
+})
+
+test('the fourteen shipping analyzers spread across the three families', () => {
+  const shipping = MODULE_REGISTRY.filter((e) => e.analyzer && e.hidden !== true)
+  expect(shipping).toHaveLength(14)
+  const byFamily = (f: string) => shipping.filter((e) => e.family === f).map((e) => e.key)
+  expect(byFamily('borrower')).toEqual(['id', 'credit'])
+  expect(byFamily('property')).toEqual(['appraisal', 'title', 'insurance'])
+  expect(byFamily('financials')).toEqual(
+    ['bank', 'pl', 'paystub', 'tax1040', 'taxbiz', 'k1', 'form1099', 'w2', 'voe'],
+  )
+})
+
 test('the seven current analyzers sort into the three evidence families', () => {
   expect(analyzerFamily('id')).toBe('borrower')
   expect(analyzerFamily('credit')).toBe('borrower')
