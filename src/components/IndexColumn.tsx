@@ -1,5 +1,7 @@
 import { Fragment } from 'react'
+import type { ReactNode } from 'react'
 import type { Provenance } from '../lib/provenance'
+import { NotMeasured } from './NotMeasured'
 
 export interface IndexRow {
   key: string
@@ -19,7 +21,7 @@ export function IndexColumn({ groups, activeKey, onSelect, heading, headingValue
   activeKey: string
   onSelect: (key: string) => void
   heading: string
-  headingValue?: string
+  headingValue?: ReactNode
 }) {
   return (
     <div className="index">
@@ -49,10 +51,7 @@ export function IndexColumn({ groups, activeKey, onSelect, heading, headingValue
                 {row.percent == null ? null : row.provenance === 'unmeasured' ? (
                   // No track either: an empty rail beside the dash still reads as a
                   // measurement that came back at zero.
-                  <span className="index-pct none">
-                    <span aria-hidden="true">—</span>
-                    <span className="sr-only">Not measured</span>
-                  </span>
+                  <span className="index-pct none"><NotMeasured /></span>
                 ) : (
                   <>
                     <span

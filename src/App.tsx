@@ -11,7 +11,8 @@ import { IndexColumn } from './components/IndexColumn'
 import type { IndexGroup } from './components/IndexColumn'
 import { DeliveryPanel } from './components/DeliveryPanel'
 import { AnalyzersOverview } from './components/AnalyzersOverview'
-import { partitionModules, globalAnalyzerPercent, groupByFamily, shortLabel } from './lib/analyzers'
+import { NotMeasured } from './components/NotMeasured'
+import { partitionModules, analyzerAggregate, groupByFamily, shortLabel } from './lib/analyzers'
 import { provenanceOf } from './lib/provenance'
 
 const DELIVERY = 'delivery'
@@ -74,7 +75,7 @@ export default function App() {
 
   let groups: IndexGroup[]
   let heading: string
-  let headingValue: string | undefined
+  let headingValue: ReactElement | string | undefined
   let indexActive: string
   let onSelect: (key: string) => void
   let detail: ReactElement | null
@@ -93,7 +94,8 @@ export default function App() {
       })),
     ]
     heading = 'Analyzers'
-    headingValue = `${globalAnalyzerPercent(analyzers)}%`
+    const agg = analyzerAggregate(analyzers)
+    headingValue = agg.provenance === 'unmeasured' ? <NotMeasured /> : `${agg.percent}%`
     indexActive = activeAnalyzer
     onSelect = setActiveAnalyzer
     detail = analyzerActive

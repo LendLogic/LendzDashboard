@@ -58,6 +58,24 @@ test('renders the first module, then navigates into the Analyzers section', asyn
   expect(screen.getByRole('tab', { name: 'Bank Statement 77' })).toBeInTheDocument()
 })
 
+// Every analyzer in the baseline is assumed, so the section rollup has nothing
+// measured to average. Reporting that as 0% beside a row reading 77 was the
+// contradiction; the heading and the hero both have to say "not measured".
+test('the Analyzers rollup reads as not measured when no board has counted', async () => {
+  render(<App />)
+  await waitFor(() => expect(screen.getAllByText('Pricing & Eligibility')).toHaveLength(2))
+  await userEvent.click(screen.getByRole('button', { name: 'Analyzers' }))
+  await waitFor(() => expect(screen.getByText('Analyzer readiness')).toBeInTheDocument())
+
+  const heading = screen.getByRole('tablist', { name: 'Analyzers' }).previousElementSibling!
+  expect(heading.textContent).toContain('Not measured')
+  expect(heading.textContent).not.toContain('0%')
+
+  const hero = screen.getByText('Analyzer readiness').parentElement!
+  expect(hero.textContent).toContain('Not measured')
+  expect(hero.querySelector('[role="progressbar"]')).toBeNull()
+})
+
 test('a registry-only analyzer renders its card with no component changes', async () => {
   render(<App />)
   await waitFor(() => expect(screen.getAllByText('Pricing & Eligibility')).toHaveLength(2))

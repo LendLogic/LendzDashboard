@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest'
-import { groupByFamily, partitionModules, globalAnalyzerPercent, shortLabel } from './analyzers'
+import { analyzerAggregate, groupByFamily, partitionModules, globalAnalyzerPercent, shortLabel } from './analyzers'
 import type { Module } from '../../shared/readiness'
 
 const mk = (key: string, d: number, ip: number, r: number): Module => ({
@@ -47,6 +47,27 @@ test('globalAnalyzerPercent is 0 when every analyzer is assumed', () => {
   const a = { ...mk('bank', 1, 1, 1), assumed: true } as Module
   const b = { ...mk('id', 2, 0, 0), assumed: true } as Module
   expect(globalAnalyzerPercent([a, b])).toBe(0)
+})
+
+// The rows already say "not measured" one at a time. An aggregate over nothing
+// measured is the same statement, and reporting it as 0% next to a row showing
+// 77 is the contradiction this fixes.
+test('analyzerAggregate is unmeasured when no analyzer came off a board', () => {
+  const a = { ...mk('bank', 1, 1, 1), assumed: true } as Module
+  const b = { ...mk('id', 2, 0, 0), assumed: true } as Module
+  expect(analyzerAggregate([a, b])).toEqual({ percent: 0, provenance: 'unmeasured' })
+  expect(analyzerAggregate([])).toEqual({ percent: 0, provenance: 'unmeasured' })
+})
+
+test('analyzerAggregate reports a measured percent as soon as one board counts', () => {
+  const live = mk('bank', 2, 0, 1)
+  const assumed = { ...mk('tax', 1, 1, 3), assumed: true } as Module
+  expect(analyzerAggregate([live, assumed])).toEqual({ percent: 67, provenance: 'measured' })
+})
+
+// A board whose stories are all still open is a real zero, not a missing one.
+test('analyzerAggregate keeps a measured zero measured', () => {
+  expect(analyzerAggregate([mk('bank', 0, 0, 3)])).toEqual({ percent: 0, provenance: 'measured' })
 })
 
 // The index sits under an "Analyzers" heading, so repeating the word on all
