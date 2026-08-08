@@ -1,0 +1,319 @@
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  .d { --navy:#0B1F3A; --ink:#0B1F3A; --ink2:#475467; --mut:#667085; --dim:#98A2B3;
+       --line:#E4E7EC; --card:#FFFFFF;
+       --fill:#1C5CAB; --track:#CDE2FB;
+       --good:#0CA30C; --warn:#FAB219; --serious:#EC835A; --crit:#D03B3B;
+       font-family:'Archivo',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+       color:var(--ink); border:1px solid var(--line); border-radius:12px; overflow:hidden;
+       display:flex; min-height:430px; font-size:12.5px; font-feature-settings:"tnum" 0; }
+  .d.ledger { background:#F7F8FA; }
+  .d.gate   { background:#F4F6F9; }
+
+  /* rail */
+  .rl { width:78px; flex:0 0 78px; background:var(--navy); padding:14px 0;
+        display:flex; flex-direction:column; align-items:center; gap:3px; }
+  .rl .lg { width:32px; height:32px; border-radius:8px; background:#2E6BD6; color:#fff; font-size:11px;
+            font-weight:700; display:flex; align-items:center; justify-content:center; margin-bottom:12px;
+            letter-spacing:.02em; }
+  .rl .it { width:64px; padding:9px 0 7px; border-radius:9px; text-align:center; color:#9DB4D0;
+            font-size:8.5px; font-weight:600; letter-spacing:.03em; }
+  .rl .it b { display:block; font-size:15px; font-weight:400; margin-bottom:3px; line-height:1; }
+  .rl .it.on { background:rgba(255,255,255,.14); color:#fff; }
+
+  /* index */
+  .ix { width:208px; flex:0 0 208px; background:rgba(255,255,255,.62);
+        border-right:1px solid var(--line); padding:14px 0; }
+  .ix .gh { padding:12px 14px 5px; font-size:8.5px; font-weight:700; text-transform:uppercase;
+            letter-spacing:.11em; color:var(--dim); display:flex; justify-content:space-between; }
+  .ix .r { display:flex; align-items:center; gap:8px; padding:5px 14px; color:var(--ink2); font-weight:500; }
+  .ix .r .n { flex:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .ix .r .v { font-size:10.5px; font-weight:700; color:var(--dim); font-variant-numeric:tabular-nums;
+              width:20px; text-align:right; flex:0 0 20px; }
+  .ix .r.on { background:var(--card); color:var(--ink); font-weight:600; margin:0 8px; padding:5px 6px;
+              border-radius:8px; box-shadow:inset 2px 0 0 var(--fill), 0 1px 2px rgba(11,31,58,.06); }
+  .ix .r.on .v { color:var(--fill); }
+  .bar { height:3px; border-radius:2px; background:var(--track); width:30px; flex:0 0 30px; overflow:hidden; }
+  .bar i { display:block; height:100%; background:var(--fill); border-radius:0 2px 2px 0; }
+  .bar.ghost { background:transparent; box-shadow:inset 0 0 0 1px #CFD9E6; }
+  .bar.ghost i { background:rgba(28,92,171,.16); }
+
+  /* detail */
+  .dt { flex:1; padding:20px 24px; min-width:0; }
+  .hd { display:flex; justify-content:space-between; align-items:flex-start; gap:20px;
+        padding-bottom:15px; border-bottom:1px solid var(--line); }
+  .hd h4 { margin:0; font-size:19px; font-weight:600; letter-spacing:-.015em; }
+  .hd .crumb { font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:.11em;
+               color:var(--dim); margin-bottom:5px; }
+  .hd .sub { font-size:12px; color:var(--mut); margin-top:4px; max-width:52ch; line-height:1.5; }
+  .chip { display:inline-flex; align-items:center; gap:5px; font-size:10.5px; font-weight:600;
+          padding:3px 9px 3px 7px; border-radius:99px; white-space:nowrap; }
+  .chip .dot { width:7px; height:7px; border-radius:50%; flex:0 0 7px; }
+  .chip.ok { background:#E8F6E8; color:#0A6E0A; } .chip.ok .dot { background:var(--good); }
+  .chip.wn { background:#FEF4E0; color:#8A5A00; } .chip.wn .dot { background:var(--warn); }
+  .chip.na { background:#F1F3F7; color:#5A6B82; }
+  .chip.na .dot { background:transparent; box-shadow:inset 0 0 0 1.5px #98A2B3; }
+
+  .hero { display:flex; align-items:flex-end; gap:26px; margin:18px 0 4px; }
+  .hero .big { font-size:52px; font-weight:600; line-height:.9; letter-spacing:-.03em; }
+  .hero .big s { text-decoration:none; font-size:22px; font-weight:500; color:var(--mut); }
+  .hero .prov { font-size:11px; color:var(--mut); line-height:1.5; padding-bottom:4px; }
+  .hero .prov b { color:var(--ink); font-weight:600; }
+
+  .meter { height:10px; border-radius:5px; background:var(--track); overflow:hidden; margin:14px 0 0; }
+  .meter i { display:block; height:100%; background:var(--fill); border-radius:0 5px 5px 0; }
+
+  .k3 { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-top:18px; }
+  .k { background:var(--card); border:1px solid var(--line); border-radius:10px; padding:13px 14px; }
+  .k .l { font-size:8.5px; text-transform:uppercase; letter-spacing:.1em; color:var(--dim); font-weight:700; }
+  .k .n { font-size:24px; font-weight:600; margin-top:4px; letter-spacing:-.02em; }
+  .k .n s { text-decoration:none; font-size:12px; font-weight:500; color:var(--mut); margin-left:3px; }
+
+  .rows { margin-top:18px; background:var(--card); border:1px solid var(--line); border-radius:10px; overflow:hidden; }
+  .rows .rh { display:grid; grid-template-columns:1fr 74px 62px; gap:10px; padding:9px 14px;
+              font-size:8.5px; font-weight:700; text-transform:uppercase; letter-spacing:.1em;
+              color:var(--dim); border-bottom:1px solid var(--line); }
+  .rows .rr { display:grid; grid-template-columns:1fr 74px 62px; gap:10px; padding:9px 14px;
+              border-top:1px solid #F1F3F7; align-items:center; font-size:12px; }
+  .rows .rr:first-of-type { border-top:none; }
+  .rows .rr .t { color:var(--ink); font-weight:500; }
+  .rows .rr .num { text-align:right; font-variant-numeric:tabular-nums; font-weight:600; color:var(--ink2); }
+
+  /* gate track */
+  .gt { margin:20px 0 0; padding:16px 18px 12px; background:var(--card);
+        border:1px solid var(--line); border-radius:10px; }
+  .gt .ax { position:relative; height:34px; margin-top:16px; }
+  .gt .ln { position:absolute; left:0; right:0; top:15px; height:2px; background:#E4E7EC; }
+  .gt .prog { position:absolute; left:0; top:15px; height:2px; background:var(--fill); }
+  .gt .tk { position:absolute; top:0; transform:translateX(-50%); text-align:center; }
+  .gt .tk i { display:block; width:2px; height:32px; background:#CFD9E6; margin:0 auto; }
+  .gt .tk.gate i { width:2px; background:var(--warn); height:32px; }
+  .gt .tk.live i { background:var(--navy); }
+  .gt .tk span { position:absolute; top:36px; left:50%; transform:translateX(-50%); white-space:nowrap;
+                 font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:.07em; color:var(--dim); }
+  .gt .now { position:absolute; top:9px; transform:translateX(-50%); width:14px; height:14px;
+             border-radius:50%; background:var(--fill); box-shadow:0 0 0 3px var(--card); }
+  .gt .cap { font-size:8.5px; font-weight:700; text-transform:uppercase; letter-spacing:.1em; color:var(--dim); }
+
+  /* micro gate marker for index rows */
+  .gm { display:flex; align-items:center; gap:2px; width:30px; flex:0 0 30px; }
+  .gm b { display:block; height:7px; width:2px; border-radius:1px; background:#D3DDEA; }
+  .gm b.p { background:var(--fill); } .gm b.g { background:var(--warn); }
+
+  /* tokens */
+  .tok { display:grid; grid-template-columns:repeat(auto-fill,minmax(158px,1fr)); gap:9px; margin:12px 0 0; }
+  .tk2 { border:1px solid var(--line); border-radius:9px; overflow:hidden; background:#fff; }
+  .tk2 .sw { height:42px; } .tk2 .mt { padding:8px 10px; font-size:10.5px; line-height:1.45; }
+  .tk2 .mt b { display:block; font-size:11.5px; color:#0B1F3A; }
+  .tk2 .mt code { font-size:9.5px; color:#667085; }
+  .tk2 .mt em { display:block; font-style:normal; font-size:9.5px; color:#667085; margin-top:2px; }
+
+  .sig { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:12px; }
+  .sigbox { background:#fff; border:1px solid var(--line); border-radius:10px; padding:15px 17px; }
+  .sigbox .hdr { font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:.11em; margin-bottom:11px; }
+  .sigbox.m .hdr { color:#1C5CAB; } .sigbox.a .hdr { color:#667085; }
+  .sigbox p { font-size:11.5px; color:#475467; line-height:1.55; margin:11px 0 0; }
+
+  .opt-hd { display:flex; align-items:baseline; gap:10px; margin-bottom:2px; }
+  .opt-hd .lt { width:22px; height:22px; flex:0 0 22px; border-radius:6px; background:#2E6BD6; color:#fff;
+                font-size:12px; font-weight:700; display:flex; align-items:center; justify-content:center; }
+  .rec { font-size:9.5px; font-weight:700; text-transform:uppercase; letter-spacing:.07em;
+         background:#E4F5EC; color:#1E6E4A; padding:2px 8px; border-radius:99px; }
+  .navopt { margin-bottom:26px; padding:16px; border:2px solid transparent; border-radius:12px; cursor:pointer; }
+  .navopt.selected { border-color:#2E6BD6; }
+  .tradeoff { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:12px; font-size:12.5px; }
+  .tradeoff div > b { display:block; font-size:9.5px; text-transform:uppercase; letter-spacing:.07em; margin-bottom:4px; }
+  .tradeoff .g > b { color:#1E6E4A; } .tradeoff .r > b { color:#A32D2D; }
+  .tradeoff ul { margin:0; padding-left:15px; } .tradeoff li { margin-bottom:3px; }
+</style>
+
+<h2>Dirección visual</h2>
+<p class="subtitle">Tipografía en <b>Archivo</b> (variable, self-hosted en el build real — aquí viene de Google Fonts para que la veas). Una sola familia: dataviz prohíbe serif o display en las cifras porque se leen como decoración fuera de marca, así que el carácter sale de la escala, del tracking de las micro-etiquetas y de las cifras tabulares, no de una segunda fuente. El navy #0B1F3A se queda como ancla.</p>
+
+<h3>Tokens compartidos por las dos direcciones</h3>
+<p class="subtitle">Los ratios son los que medí, no estimaciones. Nota los tres que van marcados: son sub-3:1 y por eso <b>nunca</b> aparecen sin etiqueta de texto al lado.</p>
+<div class="tok">
+  <div class="tk2"><div class="sw" style="background:#0B1F3A"></div><div class="mt"><b>Ancla</b><code>#0B1F3A</code><em>16.5:1 · rail, heads, ink</em></div></div>
+  <div class="tk2"><div class="sw" style="background:#1C5CAB"></div><div class="mt"><b>Medida</b><code>#1C5CAB</code><em>6.6:1 · relleno de avance</em></div></div>
+  <div class="tk2"><div class="sw" style="background:#CDE2FB"></div><div class="mt"><b>Riel</b><code>#CDE2FB</code><em>track del mismo ramp</em></div></div>
+  <div class="tk2"><div class="sw" style="background:#F7F8FA;box-shadow:inset 0 0 0 1px #E4E7EC"></div><div class="mt"><b>Plano</b><code>#F7F8FA</code><em>fondo de página</em></div></div>
+  <div class="tk2"><div class="sw" style="background:#0CA30C"></div><div class="mt"><b>Good</b><code>#0CA30C</code><em>3.35:1 · con etiqueta</em></div></div>
+  <div class="tk2"><div class="sw" style="background:#FAB219"></div><div class="mt"><b>Warning</b><code>#FAB219</code><em>1.83:1 ⚠ exige etiqueta</em></div></div>
+  <div class="tk2"><div class="sw" style="background:#EC835A"></div><div class="mt"><b>Serious</b><code>#EC835A</code><em>2.64:1 ⚠ exige etiqueta</em></div></div>
+  <div class="tk2"><div class="sw" style="background:#D03B3B"></div><div class="mt"><b>Critical</b><code>#D03B3B</code><em>4.80:1 · con etiqueta</em></div></div>
+</div>
+<p class="subtitle" style="margin-top:12px">Lo que <b>sale</b>: los ocho <code>accentColor</code> del registry (#7A5FD0, #1E8E7E, #C77DBB, #3D6CC4, #E0913B, #B5654A, #5B8C5A, #5A8FB5). Son ocho hues arbitrarios que no codifican nada — ni identidad ni magnitud — y nunca pasaron una validación de CVD. El avance pasa a un solo hue: azul = magnitud, punto.</p>
+
+<div class="options" id="dir" style="margin-top:26px">
+
+  <div class="navopt option" data-choice="ledger" onclick="toggleSelect(this)">
+    <div class="opt-hd"><span class="lt">A</span><h3 style="margin:0">Ledger — libro de registro</h3><span class="rec">recomendada</span></div>
+    <p class="subtitle" style="margin:0 0 14px 32px">Tesis: esto es un libro de registro, no un panel de control. Renglones reglados en lugar de tarjetas flotando; la tinta es el dato. El héroe de la pantalla no es el porcentaje — es <b>cuántos módulos estamos midiendo de verdad</b>.</p>
+
+    <div class="d ledger">
+      <div class="rl">
+        <div class="lg">LL</div>
+        <div class="it"><b>◎</b>Program</div>
+        <div class="it"><b>▦</b>Delivery</div>
+        <div class="it on"><b>◈</b>Analyzers</div>
+      </div>
+      <div class="ix">
+        <div class="gh"><span>Financials</span><span>6</span></div>
+        <div class="r on"><span class="n">Bank Statement</span><span class="bar"><i style="width:77%"></i></span><span class="v">77</span></div>
+        <div class="r"><span class="n">Paystub</span><span class="bar"><i style="width:42%"></i></span><span class="v">42</span></div>
+        <div class="r"><span class="n">P&amp;L</span><span class="bar"><i style="width:25%"></i></span><span class="v">25</span></div>
+        <div class="r"><span class="n">Tax Docs</span><span class="bar ghost"><i style="width:30%"></i></span><span class="v">30</span></div>
+        <div class="r"><span class="n">VOE</span><span class="bar ghost"></span><span class="v">—</span></div>
+        <div class="r"><span class="n">VOD</span><span class="bar ghost"></span><span class="v">—</span></div>
+        <div class="gh"><span>Borrower</span><span>6</span></div>
+        <div class="r"><span class="n">ID</span><span class="bar"><i style="width:30%"></i></span><span class="v">30</span></div>
+        <div class="r"><span class="n">Credit Report</span><span class="bar"><i style="width:20%"></i></span><span class="v">20</span></div>
+        <div class="r"><span class="n">SSN</span><span class="bar ghost"></span><span class="v">—</span></div>
+        <div class="r"><span class="n">OFAC</span><span class="bar ghost"></span><span class="v">—</span></div>
+        <div class="gh"><span>Property</span><span>4</span></div>
+        <div class="r"><span class="n">Appraisal</span><span class="bar"><i style="width:18%"></i></span><span class="v">18</span></div>
+        <div class="r"><span class="n">Title</span><span class="bar ghost"></span><span class="v">—</span></div>
+      </div>
+      <div class="dt">
+        <div class="hd">
+          <div>
+            <div class="crumb">Analyzers · Financials</div>
+            <h4>Bank Statement</h4>
+            <div class="sub">Extracción de estados de cuenta con provenance por campo. Ajuste de formatos en curso.</div>
+          </div>
+          <span class="chip ok"><span class="dot"></span>On track</span>
+        </div>
+        <div class="hero">
+          <div class="big">77<s>%</s></div>
+          <div class="prov"><b>24 stories medidas</b> del board de Monday<br>Go/No-Go <b>Jul 27</b> · Go Live <b>Aug 1</b></div>
+        </div>
+        <div class="meter"><i style="width:77%"></i></div>
+        <div class="k3">
+          <div class="k"><div class="l">Delivered</div><div class="n">17</div></div>
+          <div class="k"><div class="l">In progress</div><div class="n">4</div></div>
+          <div class="k"><div class="l">Remaining</div><div class="n">3</div></div>
+        </div>
+        <div class="rows">
+          <div class="rh"><span>Story</span><span style="text-align:right">Estado</span><span style="text-align:right">Subtasks</span></div>
+          <div class="rr"><span class="t">Extracción con provenance por campo</span><span class="num" style="color:#0A6E0A">Delivered</span><span class="num">6/6</span></div>
+          <div class="rr"><span class="t">Tuning de formatos por banco</span><span class="num" style="color:#8A5A00">In progress</span><span class="num">3/5</span></div>
+          <div class="rr"><span class="t">Reconciliación con P&amp;L</span><span class="num" style="color:#667085">Remaining</span><span class="num">0/4</span></div>
+        </div>
+      </div>
+    </div>
+
+    <h4 style="margin:20px 0 0;font-size:13px">El elemento firma: medido vs afirmado</h4>
+    <p class="subtitle" style="margin:4px 0 0">Hoy <b>11 de las 13 entradas del registry</b> tienen board de Monday. Pero cuando entren los 9 analyzers que faltan para llegar a 16, arrancan sin board — <b>cerca de la mitad del tablero sin medir</b>. Un dashboard normal les pondría 0% y se vería completo. Este declara la diferencia en cada escala, con la misma gramática.</p>
+    <div class="sig">
+      <div class="sigbox m">
+        <div class="hdr">Medido — viene de un board</div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <span class="bar" style="width:70px;flex:0 0 70px"><i style="width:77%"></i></span>
+          <span style="font-size:11px;font-weight:700;font-variant-numeric:tabular-nums">77</span>
+          <span class="chip ok" style="margin-left:auto"><span class="dot"></span>On track</span>
+        </div>
+        <div class="meter" style="margin-top:12px"><i style="width:77%"></i></div>
+        <p>Relleno sólido. Fecha objetivo en regla continua. El número es un hecho contable contra stories reales.</p>
+      </div>
+      <div class="sigbox a">
+        <div class="hdr">Afirmado — todavía no lo medimos</div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <span class="bar ghost" style="width:70px;flex:0 0 70px"><i style="width:30%"></i></span>
+          <span style="font-size:11px;font-weight:700;color:#98A2B3;font-variant-numeric:tabular-nums">30</span>
+          <span class="chip na" style="margin-left:auto"><span class="dot"></span>Sin medir</span>
+        </div>
+        <div class="meter" style="margin-top:12px;background:transparent;box-shadow:inset 0 0 0 1px #CFD9E6">
+          <i style="width:30%;background:rgba(28,92,171,.16)"></i></div>
+        <p>Relleno fantasma: contorno capilar y lavado al 16%. Sin board, el número va en gris y la etiqueta lo dice. <b>Sin board ni baseline, va <code>—</code>, nunca 0%.</b></p>
+      </div>
+    </div>
+    <p class="subtitle" style="margin-top:11px"><b>Por qué contorno y no trama a 45°:</b> dataviz reserva la trama diagonal para el canal de accesibilidad (CVD severo, impresión, <code>forced-colors</code>). Si la gastara aquí en provenance, los dos significados chocarían. El contorno deja el canal libre.</p>
+
+    <div class="tradeoff">
+      <div class="g"><b>A favor</b><ul>
+        <li>Honesto el día uno, cuando 12 de 22 módulos no tienen datos — que es hoy.</li>
+        <li>Renglones reglados escalan a 40 stories sin pedir más scroll que las tarjetas.</li>
+        <li>Un solo hue para magnitud; el estado siempre con etiqueta. Pasa la regla de CVD por construcción.</li></ul></div>
+      <div class="r"><b>En contra</b><ul>
+        <li>Menos vistoso en captura. Si alguien espera un dashboard colorido, esto se ve austero.</li>
+        <li>Contar "12 de 22 medidos" en el header expone una debilidad del programa a la vista de todos.</li></ul></div>
+    </div>
+  </div>
+
+  <div class="navopt option" data-choice="gate" onclick="toggleSelect(this)">
+    <div class="opt-hd"><span class="lt">B</span><h3 style="margin:0">Gate — contra la fecha</h3></div>
+    <p class="subtitle" style="margin:0 0 14px 32px">Tesis: el porcentaje no es la pregunta, la fecha sí. Todo se mide contra el <b>Go/No-Go</b>. En el índice, la barra de % se cambia por un marcador de posición contra el gate; en el detalle, el héroe es una pista de fechas.</p>
+
+    <div class="d gate">
+      <div class="rl">
+        <div class="lg">LL</div>
+        <div class="it"><b>◎</b>Program</div>
+        <div class="it"><b>▦</b>Delivery</div>
+        <div class="it on"><b>◈</b>Analyzers</div>
+      </div>
+      <div class="ix">
+        <div class="gh"><span>Financials</span><span>6</span></div>
+        <div class="r on"><span class="n">Bank Statement</span><span class="gm"><b class="p"></b><b class="p"></b><b class="p"></b><b class="g"></b><b></b></span><span class="v">77</span></div>
+        <div class="r"><span class="n">Paystub</span><span class="gm"><b class="p"></b><b class="p"></b><b></b><b class="g"></b><b></b></span><span class="v">42</span></div>
+        <div class="r"><span class="n">P&amp;L</span><span class="gm"><b class="p"></b><b></b><b></b><b class="g"></b><b></b></span><span class="v">25</span></div>
+        <div class="r"><span class="n">Tax Docs</span><span class="gm"><b></b><b></b><b></b><b></b><b></b></span><span class="v">30</span></div>
+        <div class="r"><span class="n">VOE</span><span class="gm"><b></b><b></b><b></b><b></b><b></b></span><span class="v">—</span></div>
+        <div class="r"><span class="n">VOD</span><span class="gm"><b></b><b></b><b></b><b></b><b></b></span><span class="v">—</span></div>
+        <div class="gh"><span>Borrower</span><span>6</span></div>
+        <div class="r"><span class="n">ID</span><span class="gm"><b class="p"></b><b></b><b></b><b class="g"></b><b></b></span><span class="v">30</span></div>
+        <div class="r"><span class="n">Credit Report</span><span class="gm"><b class="p"></b><b></b><b></b><b class="g"></b><b></b></span><span class="v">20</span></div>
+        <div class="r"><span class="n">SSN</span><span class="gm"><b></b><b></b><b></b><b></b><b></b></span><span class="v">—</span></div>
+        <div class="r"><span class="n">OFAC</span><span class="gm"><b></b><b></b><b></b><b></b><b></b></span><span class="v">—</span></div>
+        <div class="gh"><span>Property</span><span>4</span></div>
+        <div class="r"><span class="n">Appraisal</span><span class="gm"><b class="p"></b><b></b><b></b><b class="g"></b><b></b></span><span class="v">18</span></div>
+        <div class="r"><span class="n">Title</span><span class="gm"><b></b><b></b><b></b><b></b><b></b></span><span class="v">—</span></div>
+      </div>
+      <div class="dt">
+        <div class="hd">
+          <div>
+            <div class="crumb">Analyzers · Financials</div>
+            <h4>Bank Statement</h4>
+            <div class="sub">Extracción de estados de cuenta con provenance por campo.</div>
+          </div>
+          <span class="chip wn"><span class="dot"></span>3 días de holgura</span>
+        </div>
+        <div class="gt">
+          <div class="cap">Camino al Go Live</div>
+          <div class="ax">
+            <div class="ln"></div>
+            <div class="prog" style="width:62%"></div>
+            <div class="tk" style="left:0"><i></i><span>Jul 1</span></div>
+            <div class="tk gate" style="left:74%"><i></i><span>Go / No-Go<br>Jul 27</span></div>
+            <div class="tk live" style="left:100%"><i></i><span>Go Live<br>Aug 1</span></div>
+            <div class="now" style="left:62%"></div>
+          </div>
+        </div>
+        <div class="k3" style="margin-top:34px">
+          <div class="k"><div class="l">Avance</div><div class="n">77<s>%</s></div></div>
+          <div class="k"><div class="l">Stories abiertas</div><div class="n">7</div></div>
+          <div class="k"><div class="l">Días al gate</div><div class="n">9</div></div>
+        </div>
+        <div class="rows">
+          <div class="rh"><span>Story</span><span style="text-align:right">Estado</span><span style="text-align:right">Subtasks</span></div>
+          <div class="rr"><span class="t">Tuning de formatos por banco</span><span class="num" style="color:#8A5A00">In progress</span><span class="num">3/5</span></div>
+          <div class="rr"><span class="t">Reconciliación con P&amp;L</span><span class="num" style="color:#667085">Remaining</span><span class="num">0/4</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tradeoff">
+      <div class="g"><b>A favor</b><ul>
+        <li>Responde la pregunta que de verdad hace un stakeholder: ¿llega o no llega?</li>
+        <li>La pista de gate se repite a tres escalas y da un motivo visual propio, memorable.</li></ul></div>
+      <div class="r"><b>En contra</b><ul>
+        <li><b>No hay datos para sostenerlo.</b> Solo <b>10 de las 13 entradas actuales</b> traen <code>goNoGo</code>/<code>goLive</code>; docmagic, vt y tax no tienen ninguna, y los 9 analyzers que faltan tampoco nacerían con fecha. El encoding principal saldría vacío en buena parte del tablero.</li>
+        <li>"Días de holgura" hay que calcularlo, y nada en el payload dice a qué ritmo cierran las stories.</li>
+        <li>Cambiar la barra de % por el marcador de gate pierde la magnitud en el índice, que es lo que hace escaneable la lista.</li></ul></div>
+    </div>
+    <p class="subtitle" style="margin-top:11px"><b>Mi lectura:</b> la pista de gate es una buena idea con los datos equivocados — todavía. Va como añadido sobre A cuando los 22 módulos tengan fechas, no como dirección base.</p>
+  </div>
+
+</div>

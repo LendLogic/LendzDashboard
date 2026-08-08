@@ -9,7 +9,7 @@ export function DeliveryPanel({ module: m }: { module: DeliveryModule }) {
   const hasDates = brief && (brief.goNoGo || brief.goLive)
   return (
     <div className="panel active" role="tabpanel">
-      <div className="modband" style={m.accentColor ? { borderLeftColor: m.accentColor } : undefined}>
+      <div className="modband">
         <div>
           <div className="mtitle">
             {m.name}
@@ -53,7 +53,7 @@ export function DeliveryPanel({ module: m }: { module: DeliveryModule }) {
             <span className="bignum">{m.percent}<span className="unit">%</span></span>
             <span className={`pill ${STATUS_PILL[m.status]}`}>{m.statusLabel}</span>
           </div>
-          <ProgressBar percent={m.percent} color={m.accentColor} />
+          <ProgressBar percent={m.percent} />
           <div className="note">{m.note}</div>
         </div>
         <div className="card">

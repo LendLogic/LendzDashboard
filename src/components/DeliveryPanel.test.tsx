@@ -83,6 +83,15 @@ const withDetail: DeliveryModule = {
   },
 }
 
+// Blobs written before the accent colours were retired still carry the field.
+// Nothing may read it back, or an old refresh would repaint the new palette.
+test('a stale accent colour in the payload never reaches the DOM', () => {
+  const legacy = { ...m, accentColor: '#123456' } as DeliveryModule
+  const { container } = render(<DeliveryPanel module={legacy} />)
+  expect(container.querySelector('.modband')!.getAttribute('style')).toBeNull()
+  expect(screen.getByRole('progressbar').style.background).toBe('')
+})
+
 test('with a detail, renders the expandable scope and analyzer status', () => {
   render(<DeliveryPanel module={withDetail} />)
   expect(screen.getByText('Phase 1 scope')).toBeInTheDocument()

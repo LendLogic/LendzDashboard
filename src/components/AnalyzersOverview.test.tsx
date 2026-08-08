@@ -17,6 +17,16 @@ test('shows the story-weighted global percent and a card per analyzer', () => {
   expect(screen.getByText('ID Analyzer')).toBeInTheDocument()
 })
 
+test('a stale accent colour never reaches the DOM', () => {
+  const { container } = render(<AnalyzersOverview analyzers={analyzers} onSelect={() => {}} />)
+  for (const card of container.querySelectorAll('.analyzer-card')) {
+    expect(card.getAttribute('style')).toBeNull()
+  }
+  for (const bar of screen.getAllByRole('progressbar')) {
+    expect(bar.style.background).toBe('')
+  }
+})
+
 test('clicking a card selects that analyzer', async () => {
   const onSelect = vi.fn()
   render(<AnalyzersOverview analyzers={analyzers} onSelect={onSelect} />)

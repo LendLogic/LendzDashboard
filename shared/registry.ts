@@ -20,7 +20,6 @@ export interface ModuleEntry {
   // to read yet.
   hidden?: boolean
   sub?: string
-  accentColor?: string
   brief?: CardBrief
   // Hand-written baseline shown until the board returns stories. Omit it and the
   // module renders as an empty, assumed card.
@@ -82,7 +81,6 @@ export const MODULE_REGISTRY = [
     sub: 'Governed, evidence-backed loan state. Currently defining the data model and integration contract.',
     board: null,
     hidden: true,
-    accentColor: '#7A5FD0',
     baseline: {
       percent: 55,
       status: 'in_progress',
@@ -116,7 +114,6 @@ export const MODULE_REGISTRY = [
     name: 'Underwriting',
     sub: 'Analyzer framework and verification center.',
     board: 18420951193,
-    accentColor: '#1E8E7E',
     brief: {
       programStatus: 'on_track',
       programStatusLabel: 'On Track',
@@ -172,7 +169,6 @@ export const MODULE_REGISTRY = [
     sub: 'Agent orchestration and Generative UI. v1 is back online answering questions from pricing data.',
     board: 18420631446,
     statusColumn: 'status',
-    accentColor: '#C77DBB',
     brief: {
       goNoGo: 'Jul 20',
       goLive: 'Aug 1',
@@ -210,7 +206,6 @@ export const MODULE_REGISTRY = [
     sub: 'Broker-facing loan origination system.',
     board: 18420631446,
     statusColumn: 'status',
-    accentColor: '#3D6CC4',
     brief: {
       programStatus: 'on_track',
       programStatusLabel: 'On Track',
@@ -254,7 +249,6 @@ export const MODULE_REGISTRY = [
     analyzer: true,
     sub: 'Identity document extraction and validation.',
     board: 18420951197,
-    accentColor: '#E0913B',
     brief: {
       goNoGo: 'Jul 27',
       goLive: 'Aug 1',
@@ -288,7 +282,6 @@ export const MODULE_REGISTRY = [
     analyzer: true,
     sub: 'Profit & Loss statement extraction for self-employed Non-QM income.',
     board: 18420951201,
-    accentColor: '#B5654A',
     brief: {
       goNoGo: 'Jul 27',
       goLive: 'Aug 1',
@@ -301,7 +294,6 @@ export const MODULE_REGISTRY = [
     analyzer: true,
     sub: 'Income extraction and verification from paystubs.',
     board: 18420951200,
-    accentColor: '#5B8C5A',
     brief: {
       goNoGo: 'Jul 27',
       goLive: 'Aug 1',
@@ -340,7 +332,6 @@ export const MODULE_REGISTRY = [
     sub: 'Tax form extraction. Planned for Release Two.',
     board: null,
     hidden: true,
-    accentColor: '#5A8FB5',
     baseline: {
       percent: 30,
       note: 'Framework scaffolding in place. Form-specific extraction is the bulk of the work, planned for Release Two. Figures assumed.',
@@ -404,7 +395,6 @@ export function toBaselineModule(entry: ModuleEntry): DeliveryModule {
     dateConfidence: 'projected',
     assumed: true,
     assumedLabel: 'Awaiting board data',
-    accentColor: entry.accentColor,
     brief: entry.brief,
     counts: { delivered: 0, inProgress: 0, remaining: 0 },
     buckets: { delivered: [], inProgress: [], remaining: [] },

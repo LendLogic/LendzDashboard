@@ -53,7 +53,6 @@ export interface DeliveryModule {
   dateConfidence: DateConfidence
   assumed: boolean
   assumedLabel?: string
-  accentColor?: string
   brief?: CardBrief
   counts: { delivered: number; inProgress: number; remaining: number }
   buckets: {

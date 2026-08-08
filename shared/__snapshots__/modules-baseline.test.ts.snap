@@ -88,7 +88,6 @@ exports[`baseline modules payload is unchanged 1`] = `
     "dateConfidence": "committed",
     "assumed": true,
     "assumedLabel": "Architecture phase",
-    "accentColor": "#7A5FD0",
     "counts": {
       "delivered": 3,
       "inProgress": 1,
@@ -143,7 +142,6 @@ exports[`baseline modules payload is unchanged 1`] = `
     "targetDate": "mid-August",
     "dateConfidence": "committed",
     "assumed": false,
-    "accentColor": "#1E8E7E",
     "brief": {
       "programStatus": "on_track",
       "programStatusLabel": "On Track",
@@ -231,7 +229,6 @@ exports[`baseline modules payload is unchanged 1`] = `
     "targetDate": "6 July",
     "dateConfidence": "committed",
     "assumed": false,
-    "accentColor": "#C77DBB",
     "brief": {
       "goNoGo": "Jul 20",
       "goLive": "Aug 1"
@@ -291,7 +288,6 @@ exports[`baseline modules payload is unchanged 1`] = `
     "dateConfidence": "projected",
     "assumed": true,
     "assumedLabel": "Awaiting board data",
-    "accentColor": "#3D6CC4",
     "brief": {
       "programStatus": "on_track",
       "programStatusLabel": "On Track",
@@ -375,7 +371,6 @@ exports[`baseline modules payload is unchanged 1`] = `
     "dateConfidence": "committed",
     "assumed": true,
     "assumedLabel": "Scaffolding done",
-    "accentColor": "#E0913B",
     "brief": {
       "goNoGo": "Jul 27",
       "goLive": "Aug 1"
@@ -423,7 +418,6 @@ exports[`baseline modules payload is unchanged 1`] = `
     "dateConfidence": "projected",
     "assumed": true,
     "assumedLabel": "Awaiting board data",
-    "accentColor": "#B5654A",
     "brief": {
       "goNoGo": "Jul 27",
       "goLive": "Aug 1"
@@ -452,7 +446,6 @@ exports[`baseline modules payload is unchanged 1`] = `
     "dateConfidence": "projected",
     "assumed": true,
     "assumedLabel": "Awaiting board data",
-    "accentColor": "#5B8C5A",
     "brief": {
       "goNoGo": "Jul 27",
       "goLive": "Aug 1"
@@ -537,7 +530,6 @@ exports[`baseline modules payload is unchanged 1`] = `
     "dateConfidence": "committed",
     "assumed": true,
     "assumedLabel": "Scaffolding done",
-    "accentColor": "#5A8FB5",
     "counts": {
       "delivered": 1,
       "inProgress": 1,

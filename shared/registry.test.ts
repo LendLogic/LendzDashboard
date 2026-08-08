@@ -111,3 +111,9 @@ test('every registry key is unique', () => {
   const keys = MODULE_REGISTRY.map((e) => e.key)
   expect(new Set(keys).size).toBe(keys.length)
 })
+
+// Progress encodes magnitude with a single hue. A per-module colour encoded
+// nothing and was never validated for colour-vision deficiency.
+test('no entry carries a per-module accent colour', () => {
+  expect(MODULE_REGISTRY.filter((e) => 'accentColor' in e).map((e) => e.key)).toEqual([])
+})

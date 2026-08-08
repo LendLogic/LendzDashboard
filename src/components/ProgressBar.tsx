@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 
-export function ProgressBar({ percent, color }: { percent: number; color?: string }) {
+export function ProgressBar({ percent }: { percent: number }) {
   const [width, setWidth] = useState(0)
   useEffect(() => {
     const id = requestAnimationFrame(() => setWidth(percent))
@@ -14,7 +14,7 @@ export function ProgressBar({ percent, color }: { percent: number; color?: strin
         aria-valuenow={percent}
         aria-valuemin={0}
         aria-valuemax={100}
-        style={{ width: `${width}%`, ...(color ? { background: color } : {}) }}
+        style={{ width: `${width}%` }}
       />
     </div>
   )
