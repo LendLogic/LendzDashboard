@@ -14,6 +14,36 @@ test('app.css contains the core layout and panel classes', () => {
   }
 })
 
+// A media query of equal specificity placed above a base rule loses to it. The
+// three-column card rows kept overflowing a phone for exactly that reason, so
+// every width override belongs after the last base rule.
+test('the width media queries come after every base rule', () => {
+  const firstWidthQuery = css.search(/@media \(max-width/)
+  expect(firstWidthQuery).toBeGreaterThan(-1)
+  const after = css.slice(firstWidthQuery)
+  // Nothing outside a media block may follow: strip the blocks and expect only
+  // comments and whitespace left over.
+  const leftovers = after
+    .replace(/@media[^{]*\{(?:[^{}]*\{[^{}]*\})*[^{}]*\}/g, '')
+    .replace(/\/\*[\s\S]*?\*\//g, '')
+    .trim()
+  expect(leftovers).toBe('')
+})
+
+// A grid column never shrinks below its content, so a three-column row of cards
+// overflowed the viewport on a phone and the whole page scrolled sideways.
+test('the multi-column card grids collapse at phone width', () => {
+  const narrow = css.match(/@media \(max-width: 720px\) \{([\s\S]*?)\n  \}/)?.[1] ?? ''
+  expect(narrow).toMatch(/\.row3[^{]*\{[^}]*grid-template-columns:\s*minmax\(0, 1fr\)/)
+  expect(narrow).toMatch(/\.buckets|\.row3, \.buckets/)
+})
+
+test('the rail drops its fixed item width once it becomes a horizontal bar', () => {
+  const bar = css.match(/@media \(max-width: 900px\) \{([\s\S]*?)\n  \}/)?.[1] ?? ''
+  expect(bar).toMatch(/\.rail-item[^{]*\{[^}]*width:\s*auto/)
+  expect(bar).toMatch(/flex-direction:\s*row/)
+})
+
 // The pill tabs are gone with the component. Orphaned rules for a retired
 // component are the CSS equivalent of dead code.
 test('no rules survive for the retired tab navigation', () => {
