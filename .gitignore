@@ -34,3 +34,6 @@ pnpm-debug.log*
 # Internal working docs (not tracked)
 *.pdf
 Meeting_Notes_*.md
+
+# Visual brainstorming companion mockups
+.superpowers/
