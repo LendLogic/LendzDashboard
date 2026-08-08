@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest'
-import { partitionModules, globalAnalyzerPercent } from './analyzers'
+import { groupByFamily, partitionModules, globalAnalyzerPercent } from './analyzers'
 import type { Module } from '../../shared/readiness'
 
 const mk = (key: string, d: number, ip: number, r: number): Module => ({
@@ -47,6 +47,22 @@ test('globalAnalyzerPercent is 0 when every analyzer is assumed', () => {
   const a = { ...mk('bank', 1, 1, 1), assumed: true } as Module
   const b = { ...mk('id', 2, 0, 0), assumed: true } as Module
   expect(globalAnalyzerPercent([a, b])).toBe(0)
+})
+
+test('groupByFamily returns sections in family order, each in registry order', () => {
+  const analyzers = [mk('bank', 0, 0, 0), mk('id', 0, 0, 0), mk('appraisal', 0, 0, 0), mk('paystub', 0, 0, 0), mk('credit', 0, 0, 0)]
+  expect(groupByFamily(analyzers).map((s) => [s.family, s.label, s.modules.map((m) => m.key)])).toEqual([
+    ['borrower', 'Borrower', ['id', 'credit']],
+    ['property', 'Property', ['appraisal']],
+    ['financials', 'Financials', ['bank', 'paystub']],
+  ])
+})
+
+// A heading with nothing under it is noise, and half the families sit empty
+// until the remaining analyzers get boards.
+test('groupByFamily drops families with no modules', () => {
+  expect(groupByFamily([mk('appraisal', 0, 0, 0)]).map((s) => s.family)).toEqual(['property'])
+  expect(groupByFamily([])).toEqual([])
 })
 
 test('partitionModules skips analyzer keys missing from the payload', () => {

@@ -1,5 +1,23 @@
 import type { Module } from '../../shared/readiness'
 import { ANALYZER_KEYS, creditedPercent } from '../../shared/readiness'
+import type { AnalyzerFamily } from '../../shared/registry'
+import { ANALYZER_FAMILIES, FAMILY_LABEL, analyzerFamily } from '../../shared/registry'
+
+export interface FamilySection {
+  family: AnalyzerFamily
+  label: string
+  modules: Module[]
+}
+
+// Empty families are dropped rather than rendered as bare headings: most of them
+// sit empty until the remaining analyzers get boards.
+export function groupByFamily(analyzers: Module[]): FamilySection[] {
+  return ANALYZER_FAMILIES.map((family) => ({
+    family,
+    label: FAMILY_LABEL[family],
+    modules: analyzers.filter((m) => analyzerFamily(m.key) === family),
+  })).filter((section) => section.modules.length > 0)
+}
 
 export function partitionModules(modules: Module[]): { delivery: Module[]; analyzers: Module[] } {
   const analyzerSet = new Set<string>(ANALYZER_KEYS)
