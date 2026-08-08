@@ -58,11 +58,11 @@ test('cleanTitle strips sprint and id prefixes but leaves plain titles', () => {
 })
 
 test('ANALYZER_KEYS are the registry entries flagged as analyzers, in order', () => {
-  expect(ANALYZER_KEYS).toEqual(['bank', 'id', 'pl', 'paystub', 'appraisal', 'credit', 'tax'])
+  expect(ANALYZER_KEYS).toEqual(['bank', 'id', 'pl', 'paystub', 'appraisal', 'credit', 'tax', 'tax1040', 'taxbiz', 'k1', 'form1099', 'w2', 'voe', 'title', 'insurance'])
 })
 
 test('MODULE_ORDER is the canonical registry order', () => {
-  expect(MODULE_ORDER).toEqual(['pe', 'vt', 'uw', 'lexi', 'broker', 'docmagic', 'bank', 'id', 'pl', 'paystub', 'appraisal', 'credit', 'tax'])
+  expect(MODULE_ORDER).toEqual(['pe', 'vt', 'uw', 'lexi', 'broker', 'docmagic', 'bank', 'id', 'pl', 'paystub', 'appraisal', 'credit', 'tax', 'tax1040', 'taxbiz', 'k1', 'form1099', 'w2', 'voe', 'title', 'insurance'])
 })
 
 test('getModuleStatusColumnId defaults to task_status; broker, lexi, credit and docmagic declare their own', () => {
@@ -128,6 +128,14 @@ test('activeModuleKeys are the board-backed, non-hidden modules in canonical ord
     'paystub',
     'appraisal',
     'credit',
+    'tax1040',
+    'taxbiz',
+    'k1',
+    'form1099',
+    'w2',
+    'voe',
+    'title',
+    'insurance',
   ])
 })
 
