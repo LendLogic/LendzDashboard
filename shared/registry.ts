@@ -1,5 +1,18 @@
 import type { CardBrief, DeliveryModule } from './readiness.js'
 
+// Analyzers group by the kind of evidence they read, in the order a loan file is
+// read: who is borrowing, what secures it, what the money says. The navigation
+// index renders one section per family, so this order is the order on screen.
+export const ANALYZER_FAMILIES = ['borrower', 'property', 'financials'] as const
+
+export type AnalyzerFamily = (typeof ANALYZER_FAMILIES)[number]
+
+export const FAMILY_LABEL: Record<AnalyzerFamily, string> = {
+  borrower: 'Borrower',
+  property: 'Property',
+  financials: 'Financials',
+}
+
 // Single source of truth for every dashboard module. Adding one means adding one
 // entry here: the module key union, tab order, analyzer tab membership, baseline
 // card, board id and status column are all derived from this list.
@@ -8,6 +21,9 @@ export interface ModuleEntry {
   name: string
   // Renders under the Analyzers tab instead of as a top-level delivery tab.
   analyzer?: boolean
+  // Required on an analyzer, meaningless on a delivery module: the index groups
+  // by family, so an analyzer without one would group under nothing.
+  family?: AnalyzerFamily
   // null/omitted = no Monday board yet, so the module stays hidden until an id
   // is set here or via its env var.
   board?: number | null
@@ -228,6 +244,7 @@ export const MODULE_REGISTRY = [
     key: 'bank',
     name: 'Bank Statement Analyzer',
     analyzer: true,
+    family: 'financials',
     sub: 'Document-extraction analyzer. Build progress from the Analyzers workstream.',
     board: 18420951194,
     brief: {
@@ -247,6 +264,7 @@ export const MODULE_REGISTRY = [
     key: 'id',
     name: 'ID Analyzer',
     analyzer: true,
+    family: 'borrower',
     sub: 'Identity document extraction and validation.',
     board: 18420951197,
     brief: {
@@ -280,6 +298,7 @@ export const MODULE_REGISTRY = [
     key: 'pl',
     name: 'P&L Analyzer',
     analyzer: true,
+    family: 'financials',
     sub: 'Profit & Loss statement extraction for self-employed Non-QM income.',
     board: 18420951201,
     brief: {
@@ -292,6 +311,7 @@ export const MODULE_REGISTRY = [
     key: 'paystub',
     name: 'Paystub Analyzer',
     analyzer: true,
+    family: 'financials',
     sub: 'Income extraction and verification from paystubs.',
     board: 18420951200,
     brief: {
@@ -304,6 +324,7 @@ export const MODULE_REGISTRY = [
     key: 'appraisal',
     name: 'Appraisal Analyzer',
     analyzer: true,
+    family: 'property',
     sub: 'Property valuation and collateral data extraction from appraisal reports.',
     board: 18423914149,
     brief: {
@@ -316,6 +337,7 @@ export const MODULE_REGISTRY = [
     key: 'credit',
     name: 'Credit Report Analyzer',
     analyzer: true,
+    family: 'borrower',
     sub: 'Direct credit data retrieval from bureau providers.',
     board: 18424174374,
     statusColumn: 'color_mm5qegn',
@@ -329,6 +351,7 @@ export const MODULE_REGISTRY = [
     key: 'tax',
     name: 'Tax Docs Analyzer',
     analyzer: true,
+    family: 'financials',
     sub: 'Tax form extraction. Planned for Release Two.',
     board: null,
     hidden: true,
@@ -373,6 +396,15 @@ export function isActiveEntry(entry: ModuleEntry, boardId: number | null): boole
 
 export function moduleEnvVar(entry: ModuleEntry): string {
   return entry.envVar ?? `ID_MONDAY_${entry.key.toUpperCase()}`
+}
+
+// Family is editorial metadata, so it is read from the registry rather than from
+// the payload: a blob written before a regrouping would otherwise file an
+// analyzer under a family the registry no longer uses.
+export function analyzerFamily(key: string): AnalyzerFamily | null {
+  const entry = MODULE_REGISTRY.find((e) => e.key === key)
+  if (!entry?.analyzer) return null
+  return entry.family ?? null
 }
 
 export function moduleStatusColumn(entry: ModuleEntry): string {

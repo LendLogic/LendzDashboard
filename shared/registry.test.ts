@@ -1,5 +1,14 @@
 import { expect, test } from 'vitest'
-import { MODULE_REGISTRY, isActiveEntry, moduleEnvVar, moduleStatusColumn, toBaselineModule } from './registry'
+import {
+  ANALYZER_FAMILIES,
+  FAMILY_LABEL,
+  MODULE_REGISTRY,
+  analyzerFamily,
+  isActiveEntry,
+  moduleEnvVar,
+  moduleStatusColumn,
+  toBaselineModule,
+} from './registry'
 import { ANALYZER_KEYS } from './readiness'
 
 function entryFor(key: string) {
@@ -116,4 +125,36 @@ test('every registry key is unique', () => {
 // nothing and was never validated for colour-vision deficiency.
 test('no entry carries a per-module accent colour', () => {
   expect(MODULE_REGISTRY.filter((e) => 'accentColor' in e).map((e) => e.key)).toEqual([])
+})
+
+// The index groups analyzers by family. An analyzer with no family would group
+// under nothing and silently vanish from the navigation.
+test('every analyzer declares a family, and no delivery module does', () => {
+  const missing = MODULE_REGISTRY.filter((e) => e.analyzer && !e.family).map((e) => e.key)
+  expect(missing).toEqual([])
+  const stray = MODULE_REGISTRY.filter((e) => !e.analyzer && e.family).map((e) => e.key)
+  expect(stray).toEqual([])
+})
+
+test('the family order is the loan-file reading order and every family has a label', () => {
+  expect(ANALYZER_FAMILIES).toEqual(['borrower', 'property', 'financials'])
+  expect(Object.keys(FAMILY_LABEL).sort()).toEqual([...ANALYZER_FAMILIES].sort())
+  expect(FAMILY_LABEL.borrower).toBe('Borrower')
+  expect(FAMILY_LABEL.property).toBe('Property')
+  expect(FAMILY_LABEL.financials).toBe('Financials')
+})
+
+test('the seven current analyzers sort into the three evidence families', () => {
+  expect(analyzerFamily('id')).toBe('borrower')
+  expect(analyzerFamily('credit')).toBe('borrower')
+  expect(analyzerFamily('appraisal')).toBe('property')
+  expect(analyzerFamily('bank')).toBe('financials')
+  expect(analyzerFamily('paystub')).toBe('financials')
+  expect(analyzerFamily('pl')).toBe('financials')
+  expect(analyzerFamily('tax')).toBe('financials')
+})
+
+test('a delivery module and an unknown key have no family', () => {
+  expect(analyzerFamily('pe')).toBeNull()
+  expect(analyzerFamily('nope')).toBeNull()
 })
