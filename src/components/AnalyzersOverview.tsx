@@ -23,14 +23,13 @@ export function AnalyzersOverview({ analyzers, onSelect }: {
             type="button"
             className="analyzer-card"
             onClick={() => onSelect(m.key)}
-            style={m.accentColor ? { borderLeftColor: m.accentColor } : undefined}
           >
             <div className="ac-name">{m.name}</div>
             <div>
               <span className="ac-pct">{m.percent}%</span>
               <span className={`pill ${STATUS_PILL[m.status]}`}>{m.statusLabel}</span>
             </div>
-            <ProgressBar percent={m.percent} color={m.accentColor} />
+            <ProgressBar percent={m.percent} />
           </button>
         ))}
       </div>
