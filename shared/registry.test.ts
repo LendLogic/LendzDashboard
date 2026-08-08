@@ -39,6 +39,21 @@ test('a delivery entry gets the delivery sub, not the analyzer one', () => {
   expect(card.sub).toBe('Delivery module. Build progress from its dedicated Monday board.')
 })
 
+// A badge reading "Awaiting board data" beside a 77% bar contradicts itself.
+// The generic default has to agree with whether a figure is actually there.
+test('the default assumed label distinguishes an asserted figure from a missing one', () => {
+  expect(toBaselineModule({ key: 'a', name: 'A', baseline: { percent: 77 } }).assumedLabel)
+    .toBe('Figures asserted')
+  expect(toBaselineModule({ key: 'b', name: 'B' }).assumedLabel).toBe('Awaiting board data')
+  // an authored label always wins
+  expect(toBaselineModule({ key: 'c', name: 'C', baseline: { percent: 30, assumedLabel: 'Scaffolding done' } }).assumedLabel)
+    .toBe('Scaffolding done')
+})
+
+test('bank carries an asserted label, since it has a baseline figure', () => {
+  expect(toBaselineModule(entryFor('bank')).assumedLabel).toBe('Figures asserted')
+})
+
 test('a non-assumed baseline carries no assumed label', () => {
   const card = toBaselineModule({ key: 'demo', name: 'Demo', baseline: { assumed: false } })
   expect(card.assumed).toBe(false)

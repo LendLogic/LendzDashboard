@@ -12,6 +12,7 @@ import type { IndexGroup } from './components/IndexColumn'
 import { DeliveryPanel } from './components/DeliveryPanel'
 import { AnalyzersOverview } from './components/AnalyzersOverview'
 import { partitionModules, globalAnalyzerPercent, groupByFamily, shortLabel } from './lib/analyzers'
+import { provenanceOf } from './lib/provenance'
 
 const DELIVERY = 'delivery'
 const ANALYZERS = 'analyzers'
@@ -83,7 +84,12 @@ export default function App() {
       { rows: [{ key: OVERVIEW, name: 'Overview' }] },
       ...groupByFamily(analyzers).map((s) => ({
         label: s.label,
-        rows: s.modules.map((m) => ({ key: m.key, name: shortLabel(m.name), percent: m.percent })),
+        rows: s.modules.map((m) => ({
+          key: m.key,
+          name: shortLabel(m.name),
+          percent: m.percent,
+          provenance: provenanceOf(m),
+        })),
       })),
     ]
     heading = 'Analyzers'
@@ -94,7 +100,14 @@ export default function App() {
       ? <DeliveryPanel module={analyzerActive} />
       : <AnalyzersOverview analyzers={analyzers} onSelect={setActiveAnalyzer} />
   } else {
-    groups = [{ rows: delivery.map((m) => ({ key: m.key, name: m.name, percent: m.percent })) }]
+    groups = [{
+      rows: delivery.map((m) => ({
+        key: m.key,
+        name: m.name,
+        percent: m.percent,
+        provenance: provenanceOf(m),
+      })),
+    }]
     heading = 'Delivery'
     indexActive = deliveryKey ?? ''
     onSelect = setActiveDelivery

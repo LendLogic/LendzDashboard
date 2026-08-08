@@ -55,6 +55,39 @@ test('a row without a percent shows no number and no bar', () => {
   expect(screen.getByRole('tab', { name: 'Overview' }).textContent).toBe('Overview')
 })
 
+test('an unmeasured row shows an em dash and no bar, never a zero', () => {
+  const { container } = render(
+    <IndexColumn
+      groups={[{ rows: [{ key: 'pl', name: 'P&L', percent: 0, provenance: 'unmeasured' }] }]}
+      activeKey="pl" heading="Analyzers" onSelect={() => {}}
+    />,
+  )
+  expect(container.querySelectorAll('.index-bar')).toHaveLength(0)
+  expect(screen.getByRole('tab', { name: /P&L/ }).textContent).toContain('—')
+  expect(screen.getByRole('tab', { name: /P&L/ }).textContent).not.toContain('0')
+})
+
+test('an asserted row keeps its figure but marks the bar as asserted', () => {
+  const { container } = render(
+    <IndexColumn
+      groups={[{ rows: [{ key: 'bank', name: 'Bank Statement', percent: 77, provenance: 'asserted' }] }]}
+      activeKey="bank" heading="Analyzers" onSelect={() => {}}
+    />,
+  )
+  expect(container.querySelector('.index-bar')).toHaveClass('asserted')
+  expect(screen.getByText('77')).toBeInTheDocument()
+})
+
+test('a measured row carries no asserted marking', () => {
+  const { container } = render(
+    <IndexColumn
+      groups={[{ rows: [{ key: 'pe', name: 'Pricing', percent: 71, provenance: 'measured' }] }]}
+      activeKey="pe" heading="Delivery" onSelect={() => {}}
+    />,
+  )
+  expect(container.querySelector('.index-bar')).not.toHaveClass('asserted')
+})
+
 test('the heading carries an optional aggregate value', () => {
   render(<IndexColumn groups={groups} activeKey="bank" heading="Analyzers" headingValue="36%" onSelect={() => {}} />)
   expect(screen.getByText('Analyzers')).toBeInTheDocument()

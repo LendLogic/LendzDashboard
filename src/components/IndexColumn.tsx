@@ -1,9 +1,11 @@
 import { Fragment } from 'react'
+import type { Provenance } from '../lib/provenance'
 
 export interface IndexRow {
   key: string
   name: string
   percent?: number
+  provenance?: Provenance
 }
 
 export interface IndexGroup {
@@ -44,14 +46,24 @@ export function IndexColumn({ groups, activeKey, onSelect, heading, headingValue
                 onClick={() => onSelect(row.key)}
               >
                 <span className="index-name">{row.name}</span>
-                {row.percent != null ? (
+                {row.percent == null ? null : row.provenance === 'unmeasured' ? (
+                  // No track either: an empty rail beside the dash still reads as a
+                  // measurement that came back at zero.
+                  <span className="index-pct none">
+                    <span aria-hidden="true">—</span>
+                    <span className="sr-only">Not measured</span>
+                  </span>
+                ) : (
                   <>
-                    <span className="index-bar" aria-hidden="true">
+                    <span
+                      className={`index-bar${row.provenance === 'asserted' ? ' asserted' : ''}`}
+                      aria-hidden="true"
+                    >
                       <i style={{ width: `${row.percent}%` }} />
                     </span>
                     <span className="index-pct">{row.percent}</span>
                   </>
-                ) : null}
+                )}
               </button>
             ))}
           </Fragment>

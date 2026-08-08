@@ -35,6 +35,12 @@
        unfilled track a lighter step of the same ramp. */
     --measure: #1C5CAB;
     --measure-track: #CDE2FB;
+    /* Asserted: the same hue as a wash, so the figure still reads as progress
+       while the fill declares that nobody measured it. At .16 the fill was
+       indistinguishable from the empty part of the rail and the magnitude
+       stopped reading, so it sits high enough to see and low enough to stay
+       subordinate to a measured fill. */
+    --measure-ghost: rgba(28, 92, 171, .34);
 
     /* Status. A reserved set that never carries meaning by colour alone —
        every use ships with its text label. */
@@ -239,6 +245,25 @@
     transition: width .6s cubic-bezier(.2,.7,.3,1);
   }
   @keyframes fill-in { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+
+  /* Provenance: measured is solid, asserted is a hairline outline with a wash.
+     Deliberately not a 45° hatch — that angle is reserved for the accessibility
+     channel (severe CVD, print, forced-colors), and spending it here would make
+     the two meanings collide. */
+  .track.asserted { background: transparent; box-shadow: inset 0 0 0 1px var(--rule-strong); }
+  .track.asserted .fill { background: var(--measure-ghost); }
+  .index-bar.asserted { background: transparent; box-shadow: inset 0 0 0 1px var(--rule-strong); }
+  .index-bar.asserted i { background: var(--measure-ghost); }
+  .bignum.asserted { color: var(--ink-2); }
+  .bignum.none { color: var(--ink-muted); font-weight: 500; }
+  .index-pct.none { color: var(--ink-muted); }
+  .analyzer-card.asserted { border-left-color: var(--rule); }
+
+  /* Visible to assistive tech only: the em dash needs saying out loud. */
+  .sr-only {
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+  }
   .note { font-size: var(--fs-sm); color: var(--ink-muted); margin-top: 12px; line-height: 1.55; }
 
   /* Buckets */
