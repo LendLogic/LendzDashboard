@@ -203,7 +203,7 @@
   .modband {
     background: var(--card); border: 1px solid var(--rule); border-radius: var(--r-lg);
     padding: 18px 24px; margin-bottom: 14px; display: flex; align-items: flex-start;
-    justify-content: space-between; gap: 24px; border-left: 5px solid var(--measure);
+    justify-content: space-between; gap: 24px;
   }
   .modband .mtitle { font-size: var(--fs-xl); font-weight: 600; color: var(--ink); letter-spacing: var(--track-tight); }
   .modband .mtitle .pill { font-size: var(--fs-xs); padding: 3px 11px; margin-left: 8px; vertical-align: 2px; letter-spacing: 0; }
@@ -215,9 +215,11 @@
   .modband .datestrip { display: flex; gap: 26px; }
   .modband .datestrip .dlabel { display: block; font-size: var(--fs-xs); color: var(--ink-muted); }
 
-  /* Top number row */
-  .row3 { display: grid; grid-template-columns: 1.3fr 1fr 1fr; gap: 14px; margin-bottom: 14px; }
   .card { background: var(--card); border: 1px solid var(--rule); border-radius: var(--r-lg); padding: 20px 24px; }
+  /* The meter is one value, and stretching it the full canvas made it the
+     loudest mark on the page, louder than the figure it belongs to. */
+  .card.hero { margin-bottom: 14px; }
+  .card.hero .track, .card.hero .note { max-width: 520px; }
   .card .label {
     font-size: var(--fs-micro); color: var(--ink-muted); margin-bottom: 10px;
     text-transform: uppercase; letter-spacing: var(--track-wide); font-weight: 700;
@@ -247,9 +249,10 @@
   .index-bar.asserted { background: transparent; box-shadow: inset 0 0 0 1px var(--rule-strong); }
   .index-bar.asserted i { background: var(--measure-ghost); }
   .bignum.asserted { color: var(--ink-2); }
-  .bignum.none { color: var(--ink-muted); font-weight: 500; }
+  /* An absent measurement should not carry hero weight: at the figure's own size
+     the dash reads as a mark in its own right rather than as the lack of one. */
+  .bignum.none { color: var(--ink-muted); font-weight: 500; font-size: var(--fs-2xl); }
   .index-pct.none { color: var(--ink-muted); }
-  .analyzer-card.asserted { border-left-color: var(--rule); }
 
   /* Visible to assistive tech only: the em dash needs saying out loud. */
   .sr-only {
@@ -258,24 +261,37 @@
   }
   .note { font-size: var(--fs-sm); color: var(--ink-muted); margin-top: 12px; line-height: 1.55; }
 
-  /* Buckets */
-  .buckets { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 14px; }
-  .bucket { background: var(--card); border: 1px solid var(--rule); border-radius: var(--r-lg); padding: 18px 20px; border-top: 4px solid var(--rule-strong); }
-  .bucket.green { border-top-color: var(--status-good); }
-  .bucket.amber { border-top-color: var(--status-warning); }
-  .bucket.grey  { border-top-color: var(--status-neutral); }
-  .bucket.red   { border-top-color: var(--status-critical); }
-  .bhead { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
-  .bhead .ico { width: 16px; height: 16px; border-radius: 50%; }
+  /* Story ledger: one ruled book of record instead of three parallel cards.
+     Each bucket heads its own section, so its count sits with the stories it
+     counts rather than in a separate tile. */
+  .ledger { background: var(--card); border: 1px solid var(--rule); border-radius: var(--r-lg); overflow: hidden; }
+  .ledger.empty { padding: 20px 24px; font-size: var(--fs-sm); color: var(--ink-muted); }
+  .ledger-head {
+    display: flex; justify-content: space-between; padding: 12px 22px;
+    border-bottom: 1px solid var(--rule); font-size: var(--fs-micro); font-weight: 700;
+    text-transform: uppercase; letter-spacing: var(--track-wide); color: var(--ink-muted);
+  }
+  .ledger-section + .ledger-section { border-top: 1px solid var(--rule); }
+  .ledger-group {
+    display: flex; align-items: center; gap: 9px; padding: 14px 22px 9px;
+    font-size: var(--fs-xs); font-weight: 700; text-transform: uppercase;
+    letter-spacing: var(--track-mid);
+  }
+  .ledger-group .ico { width: 10px; height: 10px; border-radius: 50%; flex: 0 0 10px; }
+  .ledger-group .ttl { flex: 1; }
+  .ledger-group .n {
+    font-size: var(--fs-md); font-weight: 700; color: var(--ink);
+    font-variant-numeric: tabular-nums; letter-spacing: 0;
+  }
   .green .ico { background: var(--status-good); } .amber .ico { background: var(--status-warning); }
   .grey .ico { background: var(--status-neutral); } .red .ico { background: var(--status-critical); }
-  .bhead .ttl { font-size: var(--fs-xs); font-weight: 700; text-transform: uppercase; letter-spacing: var(--track-mid); }
   .green .ttl { color: var(--wash-good-ink); } .amber .ttl { color: var(--wash-warning-ink); }
   .grey .ttl { color: var(--wash-neutral-ink); } .red .ttl { color: var(--wash-critical-ink); }
-  .bcount { font-size: var(--fs-xs); color: var(--ink-muted); margin-bottom: 14px; font-weight: 600; }
-  .item { font-size: var(--fs-sm); color: var(--ink-2); margin-bottom: 11px; line-height: 1.5; }
-  .item:last-child { margin-bottom: 0; }
-  .item b { color: var(--ink); font-weight: 600; }
+  .ledger-row {
+    padding: 10px 22px; border-top: 1px solid var(--rule-soft);
+    font-size: var(--fs-sm); color: var(--ink-2); line-height: 1.55;
+  }
+  .ledger-row b { color: var(--ink); font-weight: 600; }
 
   /* Capability tooltips */
   .info { display: inline-flex; align-items: center; justify-content: center; width: 15px; height: 15px;
@@ -346,7 +362,7 @@
   .foot { text-align: center; font-size: var(--fs-2xs); color: var(--ink-muted); margin-top: 22px; }
 
   .analyzer-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 14px; margin-top: 14px; }
-  .analyzer-card { text-align: left; background: var(--card); border: 1px solid var(--rule); border-left: 4px solid var(--rule-strong);
+  .analyzer-card { text-align: left; background: var(--card); border: 1px solid var(--rule);
     border-radius: var(--r-lg); padding: 16px 18px; cursor: pointer; font: inherit; }
   .analyzer-card:hover { border-color: var(--rule-strong); }
   .analyzer-card .ac-name { font-size: var(--fs-md); font-weight: 600; color: var(--ink); margin-bottom: 8px; }
@@ -385,7 +401,6 @@
   /* A grid column will not shrink below its content, and a 44px figure beside a
      status pill is wider than a third of a phone, so these stack instead. */
   @media (max-width: 720px) {
-    .row3, .buckets { grid-template-columns: minmax(0, 1fr); }
     .bignum { font-size: var(--fs-2xl); }
     .modband .datestrip { gap: 18px; }
     table { font-size: var(--fs-xs); }
