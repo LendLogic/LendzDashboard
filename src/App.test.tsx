@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react'
+import { render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, beforeEach, expect, test, vi } from 'vitest'
 import App from './App'
@@ -52,9 +52,10 @@ test('renders the first module, then navigates into the Analyzers section', asyn
   await userEvent.click(screen.getByRole('button', { name: 'Analyzers' }))
   await waitFor(() => expect(screen.getByText('Analyzer readiness')).toBeInTheDocument())
   // The index groups by evidence family, in loan-file order, and skips the empty one.
-  expect(screen.getByText('Borrower')).toBeInTheDocument()
-  expect(screen.getByText('Property')).toBeInTheDocument()
-  expect(screen.getByText('Financials')).toBeInTheDocument()
+  const index = within(screen.getByRole('tablist', { name: 'Analyzers' }))
+  expect(index.getByText('Borrower')).toBeInTheDocument()
+  expect(index.getByText('Property')).toBeInTheDocument()
+  expect(index.getByText('Financials')).toBeInTheDocument()
   await userEvent.click(screen.getByRole('tab', { name: /Bank Statement/ }))
   // The index row drops the redundant suffix; the detail header keeps the full name.
   await waitFor(() => expect(screen.getByText('Bank Statement Analyzer')).toBeInTheDocument())
@@ -105,7 +106,7 @@ test('a module below the 10% floor gets no tab, no card and no rollup weight', a
   expect(screen.queryByRole('tab', { name: /^ID$/ })).toBeNull()
   const rollup = screen.getByText('Analyzer readiness').parentElement!
   expect(rollup.textContent).toContain('67%')
-  expect(rollup.textContent).toContain('Combined across 1 analyzers')
+  expect(rollup.textContent).toContain('All 1 analyzers measured')
 })
 
 test('the Analyzers tab disappears when no analyzer clears the floor', async () => {
