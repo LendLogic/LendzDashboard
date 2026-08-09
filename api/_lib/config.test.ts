@@ -58,11 +58,11 @@ test('cleanTitle strips sprint and id prefixes but leaves plain titles', () => {
 })
 
 test('ANALYZER_KEYS are the registry entries flagged as analyzers, in order', () => {
-  expect(ANALYZER_KEYS).toEqual(['bank', 'id', 'pl', 'paystub', 'appraisal', 'credit', 'tax', 'tax1040', 'taxbiz', 'k1', 'form1099', 'w2', 'voe', 'title', 'insurance'])
+  expect(ANALYZER_KEYS).toEqual(['bank', 'id', 'pl', 'paystub', 'appraisal', 'credit', 'tax1040', 'taxbiz', 'k1', 'form1099', 'w2', 'voe', 'title', 'insurance'])
 })
 
 test('MODULE_ORDER is the canonical registry order', () => {
-  expect(MODULE_ORDER).toEqual(['pe', 'vt', 'uw', 'lexi', 'broker', 'docmagic', 'bank', 'id', 'pl', 'paystub', 'appraisal', 'credit', 'tax', 'tax1040', 'taxbiz', 'k1', 'form1099', 'w2', 'voe', 'title', 'insurance'])
+  expect(MODULE_ORDER).toEqual(['pe', 'vt', 'uw', 'lexi', 'broker', 'docmagic', 'bank', 'id', 'pl', 'paystub', 'appraisal', 'credit', 'tax1040', 'taxbiz', 'k1', 'form1099', 'w2', 'voe', 'title', 'insurance'])
 })
 
 test('getModuleStatusColumnId defaults to task_status; broker, lexi, credit and docmagic declare their own', () => {
@@ -89,13 +89,10 @@ test('getModuleBoardId: default, env override, invalid/unset falls back to defau
 })
 
 test('getModuleBoardId is null for modules whose board does not exist yet', () => {
-  for (const k of ['vt', 'tax'] as const) {
-    const env = { vt: 'ID_MONDAY_VT', tax: 'ID_MONDAY_TAX' }[k]
-    const orig = process.env[env]
-    delete process.env[env]
-    expect(getModuleBoardId(k)).toBeNull()
-    process.env[env] = orig
-  }
+  const orig = process.env.ID_MONDAY_VT
+  delete process.env.ID_MONDAY_VT
+  expect(getModuleBoardId('vt')).toBeNull()
+  process.env.ID_MONDAY_VT = orig
 })
 
 test('lexi shares the Broker LOS board, so it is board-backed by default', () => {
@@ -107,12 +104,12 @@ test('lexi shares the Broker LOS board, so it is board-backed by default', () =>
 })
 
 test('a hidden module stays out even when a board id arrives — the switch outranks the board', () => {
-  const orig = process.env.ID_MONDAY_TAX
-  process.env.ID_MONDAY_TAX = '12345'
-  expect(getModuleBoardId('tax')).toBe(12345)
-  expect(activeModuleKeys()).not.toContain('tax')
-  if (orig === undefined) delete process.env.ID_MONDAY_TAX
-  else process.env.ID_MONDAY_TAX = orig
+  const orig = process.env.ID_MONDAY_VT
+  process.env.ID_MONDAY_VT = '12345'
+  expect(getModuleBoardId('vt')).toBe(12345)
+  expect(activeModuleKeys()).not.toContain('vt')
+  if (orig === undefined) delete process.env.ID_MONDAY_VT
+  else process.env.ID_MONDAY_VT = orig
 })
 
 test('activeModuleKeys are the board-backed, non-hidden modules in canonical order', () => {

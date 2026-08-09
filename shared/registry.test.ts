@@ -111,11 +111,9 @@ test('appraisal carries its own sub and milestone dates', () => {
   expect(appraisal.brief).toEqual({ goNoGo: 'Aug 3', goLive: 'Aug 8' })
 })
 
-test('vt and tax are hidden on both counts: no board and the explicit switch', () => {
-  for (const key of ['vt', 'tax']) {
-    expect(entryFor(key).board ?? null).toBeNull()
-    expect(entryFor(key).hidden).toBe(true)
-  }
+test('vt is hidden on both counts: no board and the explicit switch', () => {
+  expect(entryFor('vt').board ?? null).toBeNull()
+  expect(entryFor('vt').hidden).toBe(true)
 })
 
 test('hidden takes a module out even with a board id; without a board there is nothing to read', () => {
@@ -127,8 +125,8 @@ test('hidden takes a module out even with a board id; without a board there is n
   expect(isActiveEntry({ ...entry, hidden: true }, null)).toBe(false)
 })
 
-test('exactly vt and tax ship hidden', () => {
-  expect(MODULE_REGISTRY.filter((e) => e.hidden).map((e) => e.key)).toEqual(['vt', 'tax'])
+test('exactly vt ships hidden', () => {
+  expect(MODULE_REGISTRY.filter((e) => e.hidden).map((e) => e.key)).toEqual(['vt'])
 })
 
 test('every registry key is unique', () => {
@@ -211,14 +209,14 @@ test('the fourteen shipping analyzers spread across the three families', () => {
   )
 })
 
-test('the seven current analyzers sort into the three evidence families', () => {
+test('an analyzer sorts into its evidence family', () => {
   expect(analyzerFamily('id')).toBe('borrower')
   expect(analyzerFamily('credit')).toBe('borrower')
   expect(analyzerFamily('appraisal')).toBe('property')
   expect(analyzerFamily('bank')).toBe('financials')
   expect(analyzerFamily('paystub')).toBe('financials')
   expect(analyzerFamily('pl')).toBe('financials')
-  expect(analyzerFamily('tax')).toBe('financials')
+  expect(analyzerFamily('tax1040')).toBe('financials')
 })
 
 test('a delivery module and an unknown key have no family', () => {
