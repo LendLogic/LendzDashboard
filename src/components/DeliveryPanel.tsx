@@ -1,15 +1,18 @@
 import type { DeliveryModule } from '../../shared/readiness'
 import { ProgressBar } from './ProgressBar'
-import { BucketColumn } from './BucketColumn'
+import { PercentReadout } from './PercentReadout'
+import { StoryLedger } from './StoryLedger'
 import { AssumedBadge } from './AssumedBadge'
 import { STATUS_PILL } from '../lib/statusPill'
+import { provenanceOf } from '../lib/provenance'
 
 export function DeliveryPanel({ module: m }: { module: DeliveryModule }) {
   const brief = m.brief
+  const provenance = provenanceOf(m)
   const hasDates = brief && (brief.goNoGo || brief.goLive)
   return (
     <div className="panel active" role="tabpanel">
-      <div className="modband" style={m.accentColor ? { borderLeftColor: m.accentColor } : undefined}>
+      <div className="modband">
         <div>
           <div className="mtitle">
             {m.name}
@@ -46,30 +49,21 @@ export function DeliveryPanel({ module: m }: { module: DeliveryModule }) {
           </div>
         </details>
       ) : null}
-      <div className="row3">
-        <div className="card">
-          <div className="label">Delivery progress</div>
-          <div>
-            <span className="bignum">{m.percent}<span className="unit">%</span></span>
-            <span className={`pill ${STATUS_PILL[m.status]}`}>{m.statusLabel}</span>
-          </div>
-          <ProgressBar percent={m.percent} color={m.accentColor} />
-          <div className="note">{m.note}</div>
+      {/* The in-progress and remaining tallies used to be two big cards of their
+          own. They now head their own ledger sections, where the stories they
+          count actually are, instead of being stated twice. */}
+      <div className="card hero">
+        <div className="label">Delivery progress</div>
+        <div>
+          <PercentReadout percent={m.percent} provenance={provenance} />
+          <span className={`pill ${STATUS_PILL[m.status]}`}>{m.statusLabel}</span>
         </div>
-        <div className="card">
-          <div className="label">In progress</div>
-          <div className="bignum">{m.counts.inProgress}</div>
-        </div>
-        <div className="card">
-          <div className="label">Remaining</div>
-          <div className="bignum">{m.counts.remaining}</div>
-        </div>
+        {provenance === 'unmeasured' ? null : (
+          <ProgressBar percent={m.percent} provenance={provenance} />
+        )}
+        <div className="note">{m.note}</div>
       </div>
-      <div className="buckets">
-        <BucketColumn tone="green" title="Delivered" count={`${m.counts.delivered} stories`} items={m.buckets.delivered} />
-        <BucketColumn tone="amber" title="In Progress" count={`${m.counts.inProgress} stories`} items={m.buckets.inProgress} />
-        <BucketColumn tone="grey" title="Remaining" count={`${m.counts.remaining} stories`} items={m.buckets.remaining} />
-      </div>
+      <StoryLedger buckets={m.buckets} counts={m.counts} provenance={provenance} />
     </div>
   )
 }

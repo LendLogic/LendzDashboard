@@ -88,7 +88,6 @@ exports[`baseline modules payload is unchanged 1`] = `
     "dateConfidence": "committed",
     "assumed": true,
     "assumedLabel": "Architecture phase",
-    "accentColor": "#7A5FD0",
     "counts": {
       "delivered": 3,
       "inProgress": 1,
@@ -143,7 +142,6 @@ exports[`baseline modules payload is unchanged 1`] = `
     "targetDate": "mid-August",
     "dateConfidence": "committed",
     "assumed": false,
-    "accentColor": "#1E8E7E",
     "brief": {
       "programStatus": "on_track",
       "programStatusLabel": "On Track",
@@ -231,7 +229,6 @@ exports[`baseline modules payload is unchanged 1`] = `
     "targetDate": "6 July",
     "dateConfidence": "committed",
     "assumed": false,
-    "accentColor": "#C77DBB",
     "brief": {
       "goNoGo": "Jul 20",
       "goLive": "Aug 1"
@@ -291,7 +288,6 @@ exports[`baseline modules payload is unchanged 1`] = `
     "dateConfidence": "projected",
     "assumed": true,
     "assumedLabel": "Awaiting board data",
-    "accentColor": "#3D6CC4",
     "brief": {
       "programStatus": "on_track",
       "programStatusLabel": "On Track",
@@ -346,7 +342,7 @@ exports[`baseline modules payload is unchanged 1`] = `
     "targetDate": "~6 July",
     "dateConfidence": "projected",
     "assumed": true,
-    "assumedLabel": "Awaiting board data",
+    "assumedLabel": "Figures asserted",
     "brief": {
       "goNoGo": "Jul 27",
       "goLive": "Aug 1"
@@ -375,7 +371,6 @@ exports[`baseline modules payload is unchanged 1`] = `
     "dateConfidence": "committed",
     "assumed": true,
     "assumedLabel": "Scaffolding done",
-    "accentColor": "#E0913B",
     "brief": {
       "goNoGo": "Jul 27",
       "goLive": "Aug 1"
@@ -423,7 +418,6 @@ exports[`baseline modules payload is unchanged 1`] = `
     "dateConfidence": "projected",
     "assumed": true,
     "assumedLabel": "Awaiting board data",
-    "accentColor": "#B5654A",
     "brief": {
       "goNoGo": "Jul 27",
       "goLive": "Aug 1"
@@ -452,7 +446,6 @@ exports[`baseline modules payload is unchanged 1`] = `
     "dateConfidence": "projected",
     "assumed": true,
     "assumedLabel": "Awaiting board data",
-    "accentColor": "#5B8C5A",
     "brief": {
       "goNoGo": "Jul 27",
       "goLive": "Aug 1"
@@ -537,7 +530,6 @@ exports[`baseline modules payload is unchanged 1`] = `
     "dateConfidence": "committed",
     "assumed": true,
     "assumedLabel": "Scaffolding done",
-    "accentColor": "#5A8FB5",
     "counts": {
       "delivered": 1,
       "inProgress": 1,
@@ -570,6 +562,198 @@ exports[`baseline modules payload is unchanged 1`] = `
           "detail": "W-2, the 1099 family, and Schedule K-1 variants."
         }
       ]
+    }
+  },
+  {
+    "key": "tax1040",
+    "name": "Tax Return Analyzer",
+    "sub": "Personal tax return extraction, Form 1040.",
+    "phase": "delivery",
+    "percent": 0,
+    "status": "early",
+    "statusLabel": "Early build",
+    "note": "Dedicated board just seeded. Figures assumed until stories land.",
+    "targetDate": "Release Two",
+    "dateConfidence": "projected",
+    "assumed": true,
+    "assumedLabel": "Awaiting board data",
+    "counts": {
+      "delivered": 0,
+      "inProgress": 0,
+      "remaining": 0
+    },
+    "buckets": {
+      "delivered": [],
+      "inProgress": [],
+      "remaining": []
+    }
+  },
+  {
+    "key": "taxbiz",
+    "name": "Business Tax Return Analyzer",
+    "sub": "Business tax return extraction.",
+    "phase": "delivery",
+    "percent": 0,
+    "status": "early",
+    "statusLabel": "Early build",
+    "note": "Dedicated board just seeded. Figures assumed until stories land.",
+    "targetDate": "Release Two",
+    "dateConfidence": "projected",
+    "assumed": true,
+    "assumedLabel": "Awaiting board data",
+    "counts": {
+      "delivered": 0,
+      "inProgress": 0,
+      "remaining": 0
+    },
+    "buckets": {
+      "delivered": [],
+      "inProgress": [],
+      "remaining": []
+    }
+  },
+  {
+    "key": "k1",
+    "name": "K-1 Analyzer",
+    "sub": "Schedule K-1 extraction.",
+    "phase": "delivery",
+    "percent": 0,
+    "status": "early",
+    "statusLabel": "Early build",
+    "note": "Dedicated board just seeded. Figures assumed until stories land.",
+    "targetDate": "Release Two",
+    "dateConfidence": "projected",
+    "assumed": true,
+    "assumedLabel": "Awaiting board data",
+    "counts": {
+      "delivered": 0,
+      "inProgress": 0,
+      "remaining": 0
+    },
+    "buckets": {
+      "delivered": [],
+      "inProgress": [],
+      "remaining": []
+    }
+  },
+  {
+    "key": "form1099",
+    "name": "1099 Analyzer",
+    "sub": "1099 form extraction.",
+    "phase": "delivery",
+    "percent": 0,
+    "status": "early",
+    "statusLabel": "Early build",
+    "note": "Dedicated board just seeded. Figures assumed until stories land.",
+    "targetDate": "Release Two",
+    "dateConfidence": "projected",
+    "assumed": true,
+    "assumedLabel": "Awaiting board data",
+    "counts": {
+      "delivered": 0,
+      "inProgress": 0,
+      "remaining": 0
+    },
+    "buckets": {
+      "delivered": [],
+      "inProgress": [],
+      "remaining": []
+    }
+  },
+  {
+    "key": "w2",
+    "name": "W-2 Analyzer",
+    "sub": "W-2 form extraction.",
+    "phase": "delivery",
+    "percent": 0,
+    "status": "early",
+    "statusLabel": "Early build",
+    "note": "Dedicated board just seeded. Figures assumed until stories land.",
+    "targetDate": "Release Two",
+    "dateConfidence": "projected",
+    "assumed": true,
+    "assumedLabel": "Awaiting board data",
+    "counts": {
+      "delivered": 0,
+      "inProgress": 0,
+      "remaining": 0
+    },
+    "buckets": {
+      "delivered": [],
+      "inProgress": [],
+      "remaining": []
+    }
+  },
+  {
+    "key": "voe",
+    "name": "VOE Analyzer",
+    "sub": "Verification of employment.",
+    "phase": "delivery",
+    "percent": 0,
+    "status": "early",
+    "statusLabel": "Early build",
+    "note": "Dedicated board just seeded. Figures assumed until stories land.",
+    "targetDate": "Release Two",
+    "dateConfidence": "projected",
+    "assumed": true,
+    "assumedLabel": "Awaiting board data",
+    "counts": {
+      "delivered": 0,
+      "inProgress": 0,
+      "remaining": 0
+    },
+    "buckets": {
+      "delivered": [],
+      "inProgress": [],
+      "remaining": []
+    }
+  },
+  {
+    "key": "title",
+    "name": "Title Analyzer",
+    "sub": "Title document extraction.",
+    "phase": "delivery",
+    "percent": 0,
+    "status": "early",
+    "statusLabel": "Early build",
+    "note": "Dedicated board just seeded. Figures assumed until stories land.",
+    "targetDate": "Release Two",
+    "dateConfidence": "projected",
+    "assumed": true,
+    "assumedLabel": "Awaiting board data",
+    "counts": {
+      "delivered": 0,
+      "inProgress": 0,
+      "remaining": 0
+    },
+    "buckets": {
+      "delivered": [],
+      "inProgress": [],
+      "remaining": []
+    }
+  },
+  {
+    "key": "insurance",
+    "name": "Insurance Analyzer",
+    "sub": "Insurance policy extraction.",
+    "phase": "delivery",
+    "percent": 0,
+    "status": "early",
+    "statusLabel": "Early build",
+    "note": "Dedicated board just seeded. Figures assumed until stories land.",
+    "targetDate": "Release Two",
+    "dateConfidence": "projected",
+    "assumed": true,
+    "assumedLabel": "Awaiting board data",
+    "counts": {
+      "delivered": 0,
+      "inProgress": 0,
+      "remaining": 0
+    },
+    "buckets": {
+      "delivered": [],
+      "inProgress": [],
+      "remaining": []
     }
   }
 ]"

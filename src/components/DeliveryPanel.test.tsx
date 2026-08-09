@@ -14,13 +14,16 @@ const m: DeliveryModule = {
   },
 }
 
-test('renders module name, percent, and three buckets', () => {
+test('renders module name, percent, and one ledger section per bucket', () => {
   render(<DeliveryPanel module={m} />)
   expect(screen.getByText('Pricing & Eligibility')).toBeInTheDocument()
   expect(screen.getByText('71')).toBeInTheDocument()
-  expect(screen.getByText('Delivered')).toBeInTheDocument()
-  expect(screen.getByText('In Progress')).toBeInTheDocument()
-  expect(screen.getAllByText('Remaining')).toHaveLength(2)
+  // Each tally now appears once, heading the stories it counts, rather than
+  // twice: once as its own card and again over a bucket.
+  for (const [title, n] of [['Delivered', '53'], ['In Progress', '14'], ['Remaining', '8']]) {
+    const head = screen.getByText(title).parentElement!
+    expect(head.textContent).toContain(n)
+  }
 })
 
 test('without a brief, shows the Target date block and no status line', () => {
@@ -82,6 +85,42 @@ const withDetail: DeliveryModule = {
     },
   },
 }
+
+const unmeasured: DeliveryModule = {
+  ...m, percent: 0, assumed: true, assumedLabel: 'Awaiting board data',
+  counts: { delivered: 0, inProgress: 0, remaining: 0 },
+}
+
+test('a module with no board reads as not measured, not as zero percent', () => {
+  const { container } = render(<DeliveryPanel module={unmeasured} />)
+  expect(container.querySelector('.bignum')!.textContent).toContain('—')
+  expect(container.querySelector('.bignum')!.textContent).not.toContain('0%')
+  expect(screen.getByText('Awaiting board data')).toBeInTheDocument()
+  // no meter at all: an empty track next to an em dash still implies a measurement
+  expect(container.querySelectorAll('[role="progressbar"]')).toHaveLength(0)
+})
+
+const asserted: DeliveryModule = { ...m, percent: 77, assumed: true, assumedLabel: 'Figures asserted' }
+
+test('an asserted module keeps its meter but marks the track as asserted', () => {
+  const { container } = render(<DeliveryPanel module={asserted} />)
+  expect(container.querySelector('.track')).toHaveClass('asserted')
+  expect(screen.getByRole('progressbar')).toHaveAttribute('aria-valuenow', '77')
+})
+
+test('a measured module carries no asserted marking on its track', () => {
+  const { container } = render(<DeliveryPanel module={m} />)
+  expect(container.querySelector('.track')).not.toHaveClass('asserted')
+})
+
+// Blobs written before the accent colours were retired still carry the field.
+// Nothing may read it back, or an old refresh would repaint the new palette.
+test('a stale accent colour in the payload never reaches the DOM', () => {
+  const legacy = { ...m, accentColor: '#123456' } as DeliveryModule
+  const { container } = render(<DeliveryPanel module={legacy} />)
+  expect(container.querySelector('.modband')!.getAttribute('style')).toBeNull()
+  expect(screen.getByRole('progressbar').style.background).toBe('')
+})
 
 test('with a detail, renders the expandable scope and analyzer status', () => {
   render(<DeliveryPanel module={withDetail} />)

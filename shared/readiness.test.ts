@@ -9,16 +9,16 @@ const at = (key: string, percent: number, extra: Partial<Module> = {}): Module =
 })
 
 test('exposes every registry module in tab order', () => {
-  expect(MODULES.map((m) => m.key)).toEqual(['pe', 'vt', 'uw', 'lexi', 'broker', 'docmagic', 'bank', 'id', 'pl', 'paystub', 'appraisal', 'credit', 'tax'])
+  expect(MODULES.map((m) => m.key)).toEqual(['pe', 'vt', 'uw', 'lexi', 'broker', 'docmagic', 'bank', 'id', 'pl', 'paystub', 'appraisal', 'credit', 'tax', 'tax1040', 'taxbiz', 'k1', 'form1099', 'w2', 'voe', 'title', 'insurance'])
 })
 
 test('flags exactly the assumed modules', () => {
   const assumed = MODULES.filter((m) => m.assumed).map((m) => m.key)
-  expect(assumed.sort()).toEqual(['appraisal', 'bank', 'broker', 'credit', 'docmagic', 'id', 'paystub', 'pl', 'tax', 'vt'])
+  expect(assumed.sort()).toEqual(['appraisal', 'bank', 'broker', 'credit', 'docmagic', 'form1099', 'id', 'insurance', 'k1', 'paystub', 'pl', 'tax', 'tax1040', 'taxbiz', 'title', 'voe', 'vt', 'w2'])
 })
 
 test('ANALYZER_KEYS lists the analyzers in order', () => {
-  expect(ANALYZER_KEYS).toEqual(['bank', 'id', 'pl', 'paystub', 'appraisal', 'credit', 'tax'])
+  expect(ANALYZER_KEYS).toEqual(['bank', 'id', 'pl', 'paystub', 'appraisal', 'credit', 'tax', 'tax1040', 'taxbiz', 'k1', 'form1099', 'w2', 'voe', 'title', 'insurance'])
 })
 
 test('pe/uw/broker carry an editorial brief; uw has expandable detail', () => {

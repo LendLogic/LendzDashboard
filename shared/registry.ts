@@ -1,5 +1,18 @@
 import type { CardBrief, DeliveryModule } from './readiness.js'
 
+// Analyzers group by the kind of evidence they read, in the order a loan file is
+// read: who is borrowing, what secures it, what the money says. The navigation
+// index renders one section per family, so this order is the order on screen.
+export const ANALYZER_FAMILIES = ['borrower', 'property', 'financials'] as const
+
+export type AnalyzerFamily = (typeof ANALYZER_FAMILIES)[number]
+
+export const FAMILY_LABEL: Record<AnalyzerFamily, string> = {
+  borrower: 'Borrower',
+  property: 'Property',
+  financials: 'Financials',
+}
+
 // Single source of truth for every dashboard module. Adding one means adding one
 // entry here: the module key union, tab order, analyzer tab membership, baseline
 // card, board id and status column are all derived from this list.
@@ -8,6 +21,9 @@ export interface ModuleEntry {
   name: string
   // Renders under the Analyzers tab instead of as a top-level delivery tab.
   analyzer?: boolean
+  // Required on an analyzer, meaningless on a delivery module: the index groups
+  // by family, so an analyzer without one would group under nothing.
+  family?: AnalyzerFamily
   // null/omitted = no Monday board yet, so the module stays hidden until an id
   // is set here or via its env var.
   board?: number | null
@@ -20,7 +36,6 @@ export interface ModuleEntry {
   // to read yet.
   hidden?: boolean
   sub?: string
-  accentColor?: string
   brief?: CardBrief
   // Hand-written baseline shown until the board returns stories. Omit it and the
   // module renders as an empty, assumed card.
@@ -82,7 +97,6 @@ export const MODULE_REGISTRY = [
     sub: 'Governed, evidence-backed loan state. Currently defining the data model and integration contract.',
     board: null,
     hidden: true,
-    accentColor: '#7A5FD0',
     baseline: {
       percent: 55,
       status: 'in_progress',
@@ -116,7 +130,6 @@ export const MODULE_REGISTRY = [
     name: 'Underwriting',
     sub: 'Analyzer framework and verification center.',
     board: 18420951193,
-    accentColor: '#1E8E7E',
     brief: {
       programStatus: 'on_track',
       programStatusLabel: 'On Track',
@@ -172,7 +185,6 @@ export const MODULE_REGISTRY = [
     sub: 'Agent orchestration and Generative UI. v1 is back online answering questions from pricing data.',
     board: 18420631446,
     statusColumn: 'status',
-    accentColor: '#C77DBB',
     brief: {
       goNoGo: 'Jul 20',
       goLive: 'Aug 1',
@@ -210,7 +222,6 @@ export const MODULE_REGISTRY = [
     sub: 'Broker-facing loan origination system.',
     board: 18420631446,
     statusColumn: 'status',
-    accentColor: '#3D6CC4',
     brief: {
       programStatus: 'on_track',
       programStatusLabel: 'On Track',
@@ -233,6 +244,7 @@ export const MODULE_REGISTRY = [
     key: 'bank',
     name: 'Bank Statement Analyzer',
     analyzer: true,
+    family: 'financials',
     sub: 'Document-extraction analyzer. Build progress from the Analyzers workstream.',
     board: 18420951194,
     brief: {
@@ -252,9 +264,9 @@ export const MODULE_REGISTRY = [
     key: 'id',
     name: 'ID Analyzer',
     analyzer: true,
+    family: 'borrower',
     sub: 'Identity document extraction and validation.',
     board: 18420951197,
-    accentColor: '#E0913B',
     brief: {
       goNoGo: 'Jul 27',
       goLive: 'Aug 1',
@@ -286,9 +298,9 @@ export const MODULE_REGISTRY = [
     key: 'pl',
     name: 'P&L Analyzer',
     analyzer: true,
+    family: 'financials',
     sub: 'Profit & Loss statement extraction for self-employed Non-QM income.',
     board: 18420951201,
-    accentColor: '#B5654A',
     brief: {
       goNoGo: 'Jul 27',
       goLive: 'Aug 1',
@@ -299,9 +311,9 @@ export const MODULE_REGISTRY = [
     key: 'paystub',
     name: 'Paystub Analyzer',
     analyzer: true,
+    family: 'financials',
     sub: 'Income extraction and verification from paystubs.',
     board: 18420951200,
-    accentColor: '#5B8C5A',
     brief: {
       goNoGo: 'Jul 27',
       goLive: 'Aug 1',
@@ -312,6 +324,7 @@ export const MODULE_REGISTRY = [
     key: 'appraisal',
     name: 'Appraisal Analyzer',
     analyzer: true,
+    family: 'property',
     sub: 'Property valuation and collateral data extraction from appraisal reports.',
     board: 18423914149,
     brief: {
@@ -324,6 +337,7 @@ export const MODULE_REGISTRY = [
     key: 'credit',
     name: 'Credit Report Analyzer',
     analyzer: true,
+    family: 'borrower',
     sub: 'Direct credit data retrieval from bureau providers.',
     board: 18424174374,
     statusColumn: 'color_mm5qegn',
@@ -337,10 +351,10 @@ export const MODULE_REGISTRY = [
     key: 'tax',
     name: 'Tax Docs Analyzer',
     analyzer: true,
+    family: 'financials',
     sub: 'Tax form extraction. Planned for Release Two.',
     board: null,
     hidden: true,
-    accentColor: '#5A8FB5',
     baseline: {
       percent: 30,
       note: 'Framework scaffolding in place. Form-specific extraction is the bulk of the work, planned for Release Two. Figures assumed.',
@@ -364,6 +378,82 @@ export const MODULE_REGISTRY = [
       },
     },
   }),
+
+  // The rest of the "Analyzers:" boards in the Underwriting folder (Monday folder
+  // 20849229). Every one reads its status from the default task_status column, so
+  // none declares one. Subs restate the analyzer's own name rather than assert
+  // scope none of these boards has published yet.
+  defineModule({
+    key: 'tax1040',
+    name: 'Tax Return Analyzer',
+    analyzer: true,
+    family: 'financials',
+    sub: 'Personal tax return extraction, Form 1040.',
+    board: 18425100702,
+  }),
+
+  defineModule({
+    key: 'taxbiz',
+    name: 'Business Tax Return Analyzer',
+    analyzer: true,
+    family: 'financials',
+    sub: 'Business tax return extraction.',
+    board: 18425100840,
+  }),
+
+  defineModule({
+    key: 'k1',
+    name: 'K-1 Analyzer',
+    analyzer: true,
+    family: 'financials',
+    sub: 'Schedule K-1 extraction.',
+    board: 18425100779,
+  }),
+
+  defineModule({
+    key: 'form1099',
+    name: '1099 Analyzer',
+    analyzer: true,
+    family: 'financials',
+    sub: '1099 form extraction.',
+    board: 18425100610,
+  }),
+
+  defineModule({
+    key: 'w2',
+    name: 'W-2 Analyzer',
+    analyzer: true,
+    family: 'financials',
+    sub: 'W-2 form extraction.',
+    board: 18425100540,
+  }),
+
+  defineModule({
+    key: 'voe',
+    name: 'VOE Analyzer',
+    analyzer: true,
+    family: 'financials',
+    sub: 'Verification of employment.',
+    board: 18425101091,
+  }),
+
+  defineModule({
+    key: 'title',
+    name: 'Title Analyzer',
+    analyzer: true,
+    family: 'property',
+    sub: 'Title document extraction.',
+    board: 18425100915,
+  }),
+
+  defineModule({
+    key: 'insurance',
+    name: 'Insurance Analyzer',
+    analyzer: true,
+    family: 'property',
+    sub: 'Insurance policy extraction.',
+    board: 18425101014,
+  }),
 ]
 
 export type ModuleKey = (typeof MODULE_REGISTRY)[number]['key']
@@ -382,6 +472,15 @@ export function isActiveEntry(entry: ModuleEntry, boardId: number | null): boole
 
 export function moduleEnvVar(entry: ModuleEntry): string {
   return entry.envVar ?? `ID_MONDAY_${entry.key.toUpperCase()}`
+}
+
+// Family is editorial metadata, so it is read from the registry rather than from
+// the payload: a blob written before a regrouping would otherwise file an
+// analyzer under a family the registry no longer uses.
+export function analyzerFamily(key: string): AnalyzerFamily | null {
+  const entry = MODULE_REGISTRY.find((e) => e.key === key)
+  if (!entry?.analyzer) return null
+  return entry.family ?? null
 }
 
 export function moduleStatusColumn(entry: ModuleEntry): string {
@@ -404,12 +503,19 @@ export function toBaselineModule(entry: ModuleEntry): DeliveryModule {
     dateConfidence: 'projected',
     assumed: true,
     assumedLabel: 'Awaiting board data',
-    accentColor: entry.accentColor,
     brief: entry.brief,
     counts: { delivered: 0, inProgress: 0, remaining: 0 },
     buckets: { delivered: [], inProgress: [], remaining: [] },
     ...entry.baseline,
   }
-  if (!module.assumed) delete module.assumedLabel
+  if (!module.assumed) {
+    delete module.assumedLabel
+    return module
+  }
+  // The generic default has to agree with whether a figure is actually there:
+  // "Awaiting board data" beside a 77% bar contradicts itself.
+  if (!entry.baseline?.assumedLabel && module.percent > 0) {
+    module.assumedLabel = 'Figures asserted'
+  }
   return module
 }
