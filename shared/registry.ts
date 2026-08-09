@@ -347,38 +347,6 @@ export const MODULE_REGISTRY = [
     },
   }),
 
-  defineModule({
-    key: 'tax',
-    name: 'Tax Docs Analyzer',
-    analyzer: true,
-    family: 'financials',
-    sub: 'Tax form extraction. Planned for Release Two.',
-    board: null,
-    hidden: true,
-    baseline: {
-      percent: 30,
-      note: 'Framework scaffolding in place. Form-specific extraction is the bulk of the work, planned for Release Two. Figures assumed.',
-      targetDate: '3 July',
-      dateConfidence: 'committed',
-      assumedLabel: 'Scaffolding done',
-      // delivered bcount "inherited foundation" (1 item); inProgress card "—" (1 item); remaining card "—" (3 items)
-      counts: { delivered: 1, inProgress: 1, remaining: 3 },
-      buckets: {
-        delivered: [
-          { title: 'Analyzer framework.', detail: 'The same structured-findings and provenance plumbing the other analyzers use.' },
-        ],
-        inProgress: [
-          { title: 'Coverage definition.', detail: 'Which forms, which fields, which discrepancy checks.' },
-        ],
-        remaining: [
-          { title: 'Personal returns.', detail: 'Form 1040 with all schedules: AGI, wages, self-employment, rental income.' },
-          { title: 'Business returns.', detail: 'Forms 1065, 1120-S, 1120: revenue, ordinary income, distributions, ownership.' },
-          { title: 'Income forms.', detail: 'W-2, the 1099 family, and Schedule K-1 variants.' },
-        ],
-      },
-    },
-  }),
-
   // The rest of the "Analyzers:" boards in the Underwriting folder (Monday folder
   // 20849229). Every one reads its status from the default task_status column, so
   // none declares one. Subs restate the analyzer's own name rather than assert

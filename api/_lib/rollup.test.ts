@@ -47,8 +47,8 @@ test('a live rebuild preserves the editorial brief (not overwritten by the rollu
 })
 
 test('a module with no stories falls back to the assumed baseline', () => {
-  const base = MODULES_BY_KEY['tax']
-  const m = buildDeliveryModule('tax', [])
+  const base = MODULES_BY_KEY['vt']
+  const m = buildDeliveryModule('vt', [])
   expect(m.assumed).toBe(true)
   expect(m.percent).toBe(base.percent)
   expect(m.buckets).toBe((base as typeof m).buckets)
@@ -80,9 +80,9 @@ test('zero-stories assumed: module without base assumedLabel gets fallback label
   expect(pe.assumed).toBe(true)
   expect(pe.assumedLabel).toBe('Awaiting board data')
 
-  const tax = buildDeliveryModule('tax', [])
-  expect(tax.assumed).toBe(true)
-  expect(tax.assumedLabel).toBe('Scaffolding done')
+  const vt = buildDeliveryModule('vt', [])
+  expect(vt.assumed).toBe(true)
+  expect(vt.assumedLabel).toBe('Architecture phase')
 })
 
 test('assembleLivePayload emits only board-backed modules in order, source live', () => {
@@ -135,11 +135,9 @@ test('board stories count regardless of the module column (no routing)', () => {
   expect(pl.counts).toEqual({ delivered: 0, inProgress: 0, remaining: 1 })
 })
 
-test('boardless modules (vt/tax) never appear in the payload', () => {
+test('a boardless module (vt) never appears in the payload', () => {
   const p = assembleLivePayload({}, 'now')
-  for (const k of ['vt', 'tax']) {
-    expect(p.modules.find((m) => m.key === k)).toBeUndefined()
-  }
+  expect(p.modules.find((m) => m.key === 'vt')).toBeUndefined()
 })
 
 test('lexi rolls up its seven routed stories: 3 delivered, 4 remaining, 43 percent, in_progress', () => {

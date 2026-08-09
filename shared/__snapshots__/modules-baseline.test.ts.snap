@@ -518,53 +518,6 @@ exports[`baseline modules payload is unchanged 1`] = `
     }
   },
   {
-    "key": "tax",
-    "name": "Tax Docs Analyzer",
-    "sub": "Tax form extraction. Planned for Release Two.",
-    "phase": "delivery",
-    "percent": 30,
-    "status": "early",
-    "statusLabel": "Early build",
-    "note": "Framework scaffolding in place. Form-specific extraction is the bulk of the work, planned for Release Two. Figures assumed.",
-    "targetDate": "3 July",
-    "dateConfidence": "committed",
-    "assumed": true,
-    "assumedLabel": "Scaffolding done",
-    "counts": {
-      "delivered": 1,
-      "inProgress": 1,
-      "remaining": 3
-    },
-    "buckets": {
-      "delivered": [
-        {
-          "title": "Analyzer framework.",
-          "detail": "The same structured-findings and provenance plumbing the other analyzers use."
-        }
-      ],
-      "inProgress": [
-        {
-          "title": "Coverage definition.",
-          "detail": "Which forms, which fields, which discrepancy checks."
-        }
-      ],
-      "remaining": [
-        {
-          "title": "Personal returns.",
-          "detail": "Form 1040 with all schedules: AGI, wages, self-employment, rental income."
-        },
-        {
-          "title": "Business returns.",
-          "detail": "Forms 1065, 1120-S, 1120: revenue, ordinary income, distributions, ownership."
-        },
-        {
-          "title": "Income forms.",
-          "detail": "W-2, the 1099 family, and Schedule K-1 variants."
-        }
-      ]
-    }
-  },
-  {
     "key": "tax1040",
     "name": "Tax Return Analyzer",
     "sub": "Personal tax return extraction, Form 1040.",
