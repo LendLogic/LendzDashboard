@@ -21,11 +21,11 @@ const mk = (key: string, d: number, ip: number, r: number): Module => ({
 test('partitionModules splits delivery vs analyzers, analyzers in canonical order', () => {
   const modules = [
     mk('pe', 0, 0, 0), mk('bank', 0, 0, 0), mk('id', 0, 0, 0), mk('pl', 0, 0, 0),
-    mk('paystub', 0, 0, 0), mk('tax', 0, 0, 0), mk('vt', 0, 0, 0),
+    mk('paystub', 0, 0, 0), mk('w2', 0, 0, 0), mk('vt', 0, 0, 0),
   ]
   const { delivery, analyzers } = partitionModules(modules)
   expect(delivery.map((m) => m.key)).toEqual(['pe', 'vt'])
-  expect(analyzers.map((m) => m.key)).toEqual(['bank', 'id', 'pl', 'paystub', 'tax'])
+  expect(analyzers.map((m) => m.key)).toEqual(['bank', 'id', 'pl', 'paystub', 'w2'])
 })
 
 test('globalAnalyzerPercent is story-weighted across analyzers, in-progress at half credit', () => {
@@ -39,8 +39,8 @@ test('globalAnalyzerPercent is 0 when there are no stories', () => {
 
 test('globalAnalyzerPercent excludes assumed modules from the weighted sum', () => {
   const live = mk('bank', 2, 0, 1)          // 2/3 real
-  const assumed = { ...mk('tax', 1, 1, 3), assumed: true } as Module
-  expect(globalAnalyzerPercent([live, assumed])).toBe(67) // 2/3 only; assumed tax ignored
+  const assumed = { ...mk('w2', 1, 1, 3), assumed: true } as Module
+  expect(globalAnalyzerPercent([live, assumed])).toBe(67) // 2/3 only; the assumed module ignored
 })
 
 test('globalAnalyzerPercent is 0 when every analyzer is assumed', () => {
@@ -61,7 +61,7 @@ test('analyzerAggregate is unmeasured when no analyzer came off a board', () => 
 
 test('analyzerAggregate reports a measured percent as soon as one board counts', () => {
   const live = mk('bank', 2, 0, 1)
-  const assumed = { ...mk('tax', 1, 1, 3), assumed: true } as Module
+  const assumed = { ...mk('w2', 1, 1, 3), assumed: true } as Module
   expect(analyzerAggregate([live, assumed])).toEqual({ percent: 67, provenance: 'measured' })
 })
 
@@ -75,7 +75,7 @@ test('analyzerAggregate keeps a measured zero measured', () => {
 test('shortLabel drops a trailing Analyzer, and leaves every other name alone', () => {
   expect(shortLabel('Bank Statement Analyzer')).toBe('Bank Statement')
   expect(shortLabel('ID Analyzer')).toBe('ID')
-  expect(shortLabel('Tax Docs Analyzer')).toBe('Tax Docs')
+  expect(shortLabel('Tax Return Analyzer')).toBe('Tax Return')
   expect(shortLabel('Pricing & Eligibility')).toBe('Pricing & Eligibility')
   expect(shortLabel('Analyzer')).toBe('Analyzer')
   expect(shortLabel('Analyzer Framework')).toBe('Analyzer Framework')
@@ -98,8 +98,8 @@ test('groupByFamily drops families with no modules', () => {
 })
 
 test('partitionModules skips analyzer keys missing from the payload', () => {
-  const modules = [mk('pe',0,0,0), mk('bank',0,0,0), mk('id',0,0,0), mk('tax',0,0,0)]
+  const modules = [mk('pe',0,0,0), mk('bank',0,0,0), mk('id',0,0,0), mk('w2',0,0,0)]
   const { delivery, analyzers } = partitionModules(modules)
   expect(delivery.map((m) => m.key)).toEqual(['pe'])
-  expect(analyzers.map((m) => m.key)).toEqual(['bank', 'id', 'tax']) // pl/paystub absent, no undefined
+  expect(analyzers.map((m) => m.key)).toEqual(['bank', 'id', 'w2']) // pl/paystub absent, no undefined
 })
