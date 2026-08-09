@@ -2,6 +2,12 @@ import type { BucketItem, DeliveryModule } from '../../shared/readiness'
 import type { Provenance } from '../lib/provenance'
 import { subtaskStatus } from '../lib/subtaskStatus'
 
+const EMPTY_MESSAGE: Record<Provenance, string> = {
+  unmeasured: 'Nothing counted yet: no board is reporting stories for this module.',
+  asserted: 'No stories itemised behind this figure.',
+  measured: 'The board has no stories yet.',
+}
+
 const SECTIONS = [
   { key: 'delivered', tone: 'green', title: 'Delivered' },
   { key: 'inProgress', tone: 'amber', title: 'In Progress' },
@@ -45,16 +51,11 @@ export function StoryLedger({ buckets, counts, provenance }: {
 }) {
   const total = counts.delivered + counts.inProgress + counts.remaining
 
-  // With no board on half the modules, the empty ledger is the ordinary view.
-  // One sentence that says which kind of empty this is beats three bare headings.
+  // An empty ledger is an ordinary view, not an edge case, so it says which kind
+  // of empty this is. An asserted figure says nothing about the board — it is a
+  // hand-written number — so it must not claim the board came back empty.
   if (total === 0) {
-    return (
-      <div className="ledger empty">
-        {provenance === 'unmeasured'
-          ? 'Nothing counted yet: no board is reporting stories for this module.'
-          : 'The board has no stories yet.'}
-      </div>
-    )
+    return <div className="ledger empty">{EMPTY_MESSAGE[provenance]}</div>
   }
 
   return (

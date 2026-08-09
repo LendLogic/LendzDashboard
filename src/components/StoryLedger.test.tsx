@@ -42,6 +42,21 @@ test('a board that returned nothing reads differently from a module with no boar
   expect(screen.queryByText(/no board is reporting stories/i)).not.toBeInTheDocument()
 })
 
+// An asserted figure says nothing about the board: it is a hand-written number
+// with no stories behind it. Claiming the board came back empty asserts a fact
+// nobody checked.
+test('an asserted figure with no stories does not claim anything about the board', () => {
+  render(
+    <StoryLedger
+      buckets={empty}
+      counts={zero}
+      provenance="asserted"
+    />,
+  )
+  expect(screen.getByText(/no stories itemised behind this figure/i)).toBeInTheDocument()
+  expect(screen.queryByText(/board/i)).not.toBeInTheDocument()
+})
+
 test('a section with a count but no itemised stories shows the count alone', () => {
   render(
     <StoryLedger
