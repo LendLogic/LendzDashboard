@@ -1,6 +1,6 @@
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { afterEach, expect, test, vi } from 'vitest'
+import { afterEach, beforeEach, expect, test, vi } from 'vitest'
 import App from './App'
 import { buildPayload } from '../shared/readiness'
 import type { Module, ReadinessPayload } from '../shared/readiness'
@@ -9,6 +9,9 @@ vi.mock('./api', () => ({
   fetchReadiness: vi.fn(() => Promise.resolve(buildPayload('2026-06-17T14:00:00Z'))),
 }))
 
+// What is on screen now lives in the URL, and jsdom keeps one location per file,
+// so a test that navigates would otherwise decide where the next one opens.
+beforeEach(() => { window.location.hash = '' })
 afterEach(() => vi.clearAllMocks())
 
 const mod = (
@@ -124,6 +127,45 @@ test('opens on the Analyzers section when every delivery module is below the flo
   await waitFor(() => expect(screen.getByText('Analyzer readiness')).toBeInTheDocument())
   expect(screen.queryByRole('tab', { name: /Pricing & Eligibility/ })).toBeNull()
   expect(screen.getByRole('button', { name: 'Analyzers' })).toBeInTheDocument()
+})
+
+test('a link straight to a module opens on it', async () => {
+  window.location.hash = '#/analyzers/bank'
+  render(<App />)
+  await waitFor(() => expect(screen.getByText('Bank Statement Analyzer')).toBeInTheDocument())
+  expect(screen.getByRole('tab', { name: /Bank Statement/ })).toHaveAttribute('aria-selected', 'true')
+})
+
+test('selecting a module puts it in the URL, so the view can be shared', async () => {
+  render(<App />)
+  await waitFor(() => expect(screen.getAllByText('Pricing & Eligibility')).toHaveLength(2))
+  await userEvent.click(screen.getByRole('tab', { name: /Underwriting/ }))
+  await waitFor(() => expect(window.location.hash).toBe('#/delivery/uw'))
+})
+
+// A pasted link is untrusted: it must not leave the console pointing at nothing.
+test('a link to a module that is not there falls back instead of rendering empty', async () => {
+  window.location.hash = '#/analyzers/does-not-exist'
+  render(<App />)
+  await waitFor(() => expect(screen.getByText('Analyzer readiness')).toBeInTheDocument())
+  expect(screen.getByRole('tab', { name: 'Overview' })).toHaveAttribute('aria-selected', 'true')
+})
+
+test('a link to a section that is not there falls back to the first one', async () => {
+  window.location.hash = '#/nonsense/whatever'
+  render(<App />)
+  await waitFor(() => expect(screen.getAllByText('Pricing & Eligibility')).toHaveLength(2))
+})
+
+test('the back button moves between modules', async () => {
+  render(<App />)
+  await waitFor(() => expect(screen.getAllByText('Pricing & Eligibility')).toHaveLength(2))
+  await userEvent.click(screen.getByRole('tab', { name: /Underwriting/ }))
+  await waitFor(() => expect(screen.getByText('Analyzer framework.')).toBeInTheDocument())
+
+  window.history.back()
+  await waitFor(() => expect(window.location.hash).not.toBe('#/delivery/uw'))
+  await waitFor(() => expect(screen.getAllByText('Pricing & Eligibility')).toHaveLength(2))
 })
 
 test('shows an empty state when no module clears the floor', async () => {

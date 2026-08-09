@@ -14,6 +14,7 @@ import { AnalyzersOverview } from './components/AnalyzersOverview'
 import { NotMeasured } from './components/NotMeasured'
 import { partitionModules, analyzerAggregate, groupByFamily, shortLabel } from './lib/analyzers'
 import { provenanceOf } from './lib/provenance'
+import { useHashRoute } from './lib/useHashRoute'
 
 const DELIVERY = 'delivery'
 const ANALYZERS = 'analyzers'
@@ -22,9 +23,9 @@ const OVERVIEW = 'overview'
 export default function App() {
   const [payload, setPayload] = useState<ReadinessPayload | null>(null)
   const [error, setError] = useState<string | null>(null)
-  const [section, setSection] = useState<string | null>(null)
-  const [activeDelivery, setActiveDelivery] = useState<string | null>(null)
-  const [activeAnalyzer, setActiveAnalyzer] = useState<string>(OVERVIEW)
+  // What is on screen lives in the URL rather than in component state, so a
+  // module can be linked to and the back button works.
+  const { route, navigate } = useHashRoute()
 
   const load = useCallback((signal?: AbortSignal) => {
     return fetchReadiness(signal)
@@ -63,15 +64,14 @@ export default function App() {
   if (delivery.length) railItems.push({ key: DELIVERY, label: 'Delivery' })
   if (analyzers.length) railItems.push({ key: ANALYZERS, label: 'Analyzers' })
 
-  // A section the payload no longer fills must not stay selected, or the index
-  // renders empty next to a detail panel with nothing in it.
+  // A link can name a section the payload no longer fills, so the route is
+  // checked against what is actually there rather than trusted.
   const available = new Set(railItems.map((it) => it.key))
-  const active = section && available.has(section) ? section : railItems[0].key
+  const active = route && available.has(route.section) ? route.section : railItems[0].key
+  const requested = route?.section === active ? route.key : null
 
-  const deliveryKey = activeDelivery && delivery.some((m) => m.key === activeDelivery)
-    ? activeDelivery
-    : delivery[0]?.key
-  const analyzerActive = analyzers.find((m) => m.key === activeAnalyzer)
+  const deliveryKey = delivery.some((m) => m.key === requested) ? requested : delivery[0]?.key
+  const analyzerActive = analyzers.find((m) => m.key === requested)
 
   let groups: IndexGroup[]
   let heading: string
@@ -96,11 +96,13 @@ export default function App() {
     heading = 'Analyzers'
     const agg = analyzerAggregate(analyzers)
     headingValue = agg.provenance === 'unmeasured' ? <NotMeasured /> : `${agg.percent}%`
-    indexActive = activeAnalyzer
-    onSelect = setActiveAnalyzer
+    // An unknown analyzer in the link falls back to the section's overview
+    // rather than leaving the index pointing at nothing.
+    indexActive = analyzerActive?.key ?? OVERVIEW
+    onSelect = (key) => navigate(ANALYZERS, key)
     detail = analyzerActive
       ? <DeliveryPanel module={analyzerActive} />
-      : <AnalyzersOverview analyzers={analyzers} onSelect={setActiveAnalyzer} />
+      : <AnalyzersOverview analyzers={analyzers} onSelect={(key) => navigate(ANALYZERS, key)} />
   } else {
     groups = [{
       rows: delivery.map((m) => ({
@@ -112,14 +114,18 @@ export default function App() {
     }]
     heading = 'Delivery'
     indexActive = deliveryKey ?? ''
-    onSelect = setActiveDelivery
+    onSelect = (key) => navigate(DELIVERY, key)
     const module = delivery.find((m) => m.key === deliveryKey)
     detail = module ? <DeliveryPanel module={module} /> : null
   }
 
   return (
     <div className="shell">
-      <Rail items={railItems} activeKey={active} onSelect={setSection} />
+      <Rail
+        items={railItems}
+        activeKey={active}
+        onSelect={(key) => navigate(key, key === ANALYZERS ? OVERVIEW : delivery[0]?.key ?? '')}
+      />
       <IndexColumn
         groups={groups}
         activeKey={indexActive}
