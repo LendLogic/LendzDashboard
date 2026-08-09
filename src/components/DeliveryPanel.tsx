@@ -2,6 +2,7 @@ import type { DeliveryModule } from '../../shared/readiness'
 import { ProgressBar } from './ProgressBar'
 import { PercentReadout } from './PercentReadout'
 import { StoryLedger } from './StoryLedger'
+import { StageTally } from './StageTally'
 import { AssumedBadge } from './AssumedBadge'
 import { STATUS_PILL } from '../lib/statusPill'
 import { provenanceOf } from '../lib/provenance'
@@ -63,6 +64,7 @@ export function DeliveryPanel({ module: m }: { module: DeliveryModule }) {
         )}
         <div className="note">{m.note}</div>
       </div>
+      <StageTally counts={m.counts} />
       <StoryLedger buckets={m.buckets} counts={m.counts} provenance={provenance} />
     </div>
   )
