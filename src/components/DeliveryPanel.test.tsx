@@ -18,12 +18,20 @@ test('renders module name, percent, and one ledger section per bucket', () => {
   render(<DeliveryPanel module={m} />)
   expect(screen.getByText('Pricing & Eligibility')).toBeInTheDocument()
   expect(screen.getByText('71')).toBeInTheDocument()
-  // Each tally now appears once, heading the stories it counts, rather than
-  // twice: once as its own card and again over a bucket.
+  // Each stage is stated twice on purpose: the tally row summarises all three,
+  // including any at zero, and the ledger head repeats the count over the
+  // stories it actually counts.
   for (const [title, n] of [['Delivered', '53'], ['In Progress', '14'], ['Remaining', '8']]) {
-    const head = screen.getByText(title).parentElement!
-    expect(head.textContent).toContain(n)
+    const [tally, ledger] = screen.getAllByText(title)
+    expect(tally.closest('.tally-cell')!.textContent).toContain(n)
+    expect(ledger.parentElement!.textContent).toContain(n)
   }
+})
+
+test('the tally row sits between the progress card and the ledger', () => {
+  const { container } = render(<DeliveryPanel module={m} />)
+  const blocks = [...container.querySelectorAll('.card.hero, .tally, .ledger')]
+  expect(blocks.map((b) => b.className)).toEqual(['card hero', 'tally', 'ledger'])
 })
 
 test('without a brief, shows the Target date block and no status line', () => {
@@ -98,6 +106,8 @@ test('a module with no board reads as not measured, not as zero percent', () => 
   expect(screen.getByText('Awaiting board data')).toBeInTheDocument()
   // no meter at all: an empty track next to an em dash still implies a measurement
   expect(container.querySelectorAll('[role="progressbar"]')).toHaveLength(0)
+  // and no tally either: three zeros would read as counted, not as uncounted
+  expect(container.querySelector('.tally')).toBeNull()
 })
 
 const asserted: DeliveryModule = { ...m, percent: 77, assumed: true, assumedLabel: 'Figures asserted' }

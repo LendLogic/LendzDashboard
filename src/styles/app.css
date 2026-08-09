@@ -261,6 +261,28 @@
   }
   .note { font-size: var(--fs-sm); color: var(--ink-muted); margin-top: 12px; line-height: 1.55; }
 
+  /* Stage tally: the three counts at a glance, above the ledger that itemises
+     them. It earns its place by keeping the zero column the ledger drops, so a
+     finished stage and an empty one stop looking alike. The figure stays well
+     under the hero percent, which is still the headline. */
+  .tally {
+    display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
+    margin: 0 0 14px; background: var(--card); border: 1px solid var(--rule);
+    border-radius: var(--r-lg); overflow: hidden;
+  }
+  .tally-cell { padding: 14px 22px; }
+  .tally-cell + .tally-cell { border-left: 1px solid var(--rule); }
+  .tally-label {
+    display: flex; align-items: center; gap: 9px; font-size: var(--fs-micro);
+    font-weight: 700; text-transform: uppercase; letter-spacing: var(--track-wide);
+    color: var(--ink-muted);
+  }
+  .tally-label .ico { width: 10px; height: 10px; border-radius: 50%; flex: 0 0 10px; }
+  .tally-n {
+    margin: 8px 0 0; font-size: var(--fs-2xl); font-weight: 600; line-height: 1;
+    color: var(--ink); font-variant-numeric: tabular-nums; letter-spacing: var(--track-tight);
+  }
+
   /* Story ledger: one ruled book of record instead of three parallel cards.
      Each bucket heads its own section, so its count sits with the stories it
      counts rather than in a separate tile. */
@@ -425,4 +447,10 @@
     .cardetail .detailbody { grid-template-columns: 1fr; gap: 18px; }
     .modband { flex-direction: column; }
     .modband .release, .modband .datestrip { text-align: left; }
+    /* Three uppercase stage labels are wider than a phone, so the columns become
+       rows and each count moves beside its own label. */
+    .tally { grid-template-columns: minmax(0, 1fr); }
+    .tally-cell { display: flex; align-items: center; justify-content: space-between; padding: 12px 18px; }
+    .tally-cell + .tally-cell { border-left: 0; border-top: 1px solid var(--rule); }
+    .tally-n { margin: 0; font-size: var(--fs-xl); }
   }
