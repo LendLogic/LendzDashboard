@@ -14,13 +14,16 @@ const m: DeliveryModule = {
   },
 }
 
-test('renders module name, percent, and three buckets', () => {
+test('renders module name, percent, and one ledger section per bucket', () => {
   render(<DeliveryPanel module={m} />)
   expect(screen.getByText('Pricing & Eligibility')).toBeInTheDocument()
   expect(screen.getByText('71')).toBeInTheDocument()
-  expect(screen.getByText('Delivered')).toBeInTheDocument()
-  expect(screen.getByText('In Progress')).toBeInTheDocument()
-  expect(screen.getAllByText('Remaining')).toHaveLength(2)
+  // Each tally now appears once, heading the stories it counts, rather than
+  // twice: once as its own card and again over a bucket.
+  for (const [title, n] of [['Delivered', '53'], ['In Progress', '14'], ['Remaining', '8']]) {
+    const head = screen.getByText(title).parentElement!
+    expect(head.textContent).toContain(n)
+  }
 })
 
 test('without a brief, shows the Target date block and no status line', () => {

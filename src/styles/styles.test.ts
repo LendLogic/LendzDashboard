@@ -9,9 +9,19 @@ const css = readFileSync(join(__dirname, './app.css'), 'utf8')
 const TOKEN_BLOCK = /:root\s*\{([\s\S]*?)\n\s*\}/
 
 test('app.css contains the core layout and panel classes', () => {
-  for (const cls of ['.shell', '.rail', '.index', '.canvas', '.masthead', '.panel', '.modband', '.bucket', '.bignum', '.fill']) {
+  for (const cls of ['.shell', '.rail', '.index', '.canvas', '.masthead', '.panel', '.modband', '.ledger', '.bignum', '.fill']) {
     expect(css).toContain(cls)
   }
+})
+
+// Both left accents existed only to display the per-module accentColor. With one
+// hue they say nothing, and a coloured edge implies a category that is not there.
+test('no rules survive for the retired bucket cards or their accent edges', () => {
+  for (const cls of ['.buckets', '.bucket ', '.bucket.', '.row3', '.bcount', '.bhead']) {
+    expect(css).not.toContain(cls)
+  }
+  expect(css).not.toMatch(/\.modband[^{]*\{[^}]*border-left/)
+  expect(css).not.toMatch(/\.analyzer-card[^{]*\{[^}]*border-left/)
 })
 
 // A media query of equal specificity placed above a base rule loses to it. The
@@ -30,12 +40,10 @@ test('the width media queries come after every base rule', () => {
   expect(leftovers).toBe('')
 })
 
-// A grid column never shrinks below its content, so a three-column row of cards
-// overflowed the viewport on a phone and the whole page scrolled sideways.
-test('the multi-column card grids collapse at phone width', () => {
+// A 44px figure beside a status pill does not fit a phone column.
+test('the hero figure shrinks at phone width', () => {
   const narrow = css.match(/@media \(max-width: 720px\) \{([\s\S]*?)\n  \}/)?.[1] ?? ''
-  expect(narrow).toMatch(/\.row3[^{]*\{[^}]*grid-template-columns:\s*minmax\(0, 1fr\)/)
-  expect(narrow).toMatch(/\.buckets|\.row3, \.buckets/)
+  expect(narrow).toMatch(/\.bignum[^{]*\{[^}]*font-size/)
 })
 
 test('the rail drops its fixed item width once it becomes a horizontal bar', () => {
